@@ -25,4 +25,8 @@ test("input validation", () => {
   expect(validateInput({ type: "city", value: "" })).toBe(false);
   expect(validateInput({ type: "city", value: "Vilnus1" })).toBe(false);
   expect(validateInput({ type: "city", value: "Vilnus!" })).toBe(false);
+  expect(validateInput({ type: "dob", value: "2010-05-15" })).toBe(true);
+  expect(validateInput({ type: "dob", value: "2020-01-01" })).toBe(false);
+  expect(validateInput({ type: "street", value: "Levshina" })).toBe(true);
+  expect(validateInput({ type: "street", value: "" })).toBe(false);
 });

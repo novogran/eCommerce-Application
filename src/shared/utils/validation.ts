@@ -3,7 +3,9 @@ type ValidationInput =
   | { type: "password"; value: string }
   | { type: "firstName"; value: string }
   | { type: "lastName"; value: string }
-  | { type: "city"; value: string };
+  | { type: "city"; value: string }
+  | { type: "dob"; value: string }
+  | { type: "street"; value: string };
 
 export function validateInput(input: ValidationInput): boolean {
   switch (input.type) {
@@ -16,6 +18,10 @@ export function validateInput(input: ValidationInput): boolean {
       return validateName(input.value);
     case "city":
       return validateCity(input.value);
+    case "dob":
+      return validateDOB(input.value);
+    case "street":
+      return validateStreet(input.value);
   }
 }
 
@@ -47,3 +53,15 @@ const validateName = (name: string): boolean => {
 };
 
 const validateCity = (city: string): boolean => validateName(city);
+
+const validateDOB = (dobString: string): boolean => {
+  const dob = new Date(dobString);
+  if (isNaN(dob.getTime())) return false;
+
+  const today = new Date();
+  const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+
+  return dob <= minAgeDate;
+};
+
+const validateStreet = (street: string): boolean => street.trim().length > 0;
