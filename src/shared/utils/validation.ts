@@ -5,7 +5,9 @@ type ValidationInput =
   | { type: "lastName"; value: string }
   | { type: "city"; value: string }
   | { type: "dob"; value: string }
-  | { type: "street"; value: string };
+  | { type: "street"; value: string }
+  | { type: "postalCode"; value: { code: string; country: string } }
+  | { type: "country"; value: string };
 
 export function validateInput(input: ValidationInput): boolean {
   switch (input.type) {
@@ -22,6 +24,10 @@ export function validateInput(input: ValidationInput): boolean {
       return validateDOB(input.value);
     case "street":
       return validateStreet(input.value);
+    case "postalCode":
+      return validatePostalCode(input.value.code, input.value.country);
+    case "country":
+      return validateCountry(input.value);
   }
 }
 
@@ -65,3 +71,17 @@ const validateDOB = (dobString: string): boolean => {
 };
 
 const validateStreet = (street: string): boolean => street.trim().length > 0;
+
+const POSTAL_CODE_PATTERNS: Record<string, RegExp> = {
+  BY: /^\d{6}$/,
+};
+
+const validatePostalCode = (code: string, country: string): boolean => {
+  const pattern = POSTAL_CODE_PATTERNS[country.toUpperCase()];
+  return pattern ? pattern.test(code.trim()) : false;
+};
+
+const VALID_COUNTRIES = ["BY"];
+
+const validateCountry = (country: string): boolean =>
+  VALID_COUNTRIES.includes(country.toUpperCase());
