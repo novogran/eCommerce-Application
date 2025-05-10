@@ -45,7 +45,9 @@ const LoginForm = ({
         alignItems: "center",
       }}
     >
-      <Box sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2 }}>
+      <Box
+        sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "300px", sm: "500px" } }}
+      >
         <Typography variant="h5" component="h1" align="center" gutterBottom>
           Sign in
         </Typography>
@@ -109,11 +111,6 @@ const LoginForm = ({
               </Button>
             </Grid>
             <Grid container>
-              <Grid>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid>
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
