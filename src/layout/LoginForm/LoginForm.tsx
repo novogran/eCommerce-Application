@@ -1,8 +1,22 @@
-import { Container, TextField, Button, Grid, Typography, Box, Link } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  Box,
+  Link,
+  FormHelperText,
+} from "@mui/material";
+
+const EMAIL_ERROR_MESSAGE: string = "Incorrect email";
+const PASSWORD_ERROR_MESSAGE: string = "Incorrect password";
 
 type LoginFormProps = {
   email?: string;
   password?: string;
+  isEmailValid?: boolean;
+  isPasswordValid?: boolean;
   onEmailChange?: () => void;
   onPasswordChange?: () => void;
   onSubmit?: () => void;
@@ -11,6 +25,8 @@ type LoginFormProps = {
 const LoginForm = ({
   email,
   password,
+  isEmailValid,
+  isPasswordValid,
   onEmailChange,
   onPasswordChange,
   onSubmit,
@@ -41,6 +57,11 @@ const LoginForm = ({
                 value={email}
                 onChange={onEmailChange}
               />
+              {!isEmailValid && (
+                <FormHelperText error sx={{ mx: 0 }}>
+                  {EMAIL_ERROR_MESSAGE}
+                </FormHelperText>
+              )}
             </Grid>
             <Grid>
               <TextField
@@ -52,6 +73,11 @@ const LoginForm = ({
                 value={password}
                 onChange={onPasswordChange}
               />
+              {!isPasswordValid && (
+                <FormHelperText error sx={{ mx: 0 }}>
+                  {PASSWORD_ERROR_MESSAGE}
+                </FormHelperText>
+              )}
             </Grid>
             <Grid>
               <Button
@@ -60,6 +86,7 @@ const LoginForm = ({
                 color="primary"
                 size="large"
                 type="submit"
+                formNoValidate
                 sx={{ mt: 2 }}
               >
                 Sign in
