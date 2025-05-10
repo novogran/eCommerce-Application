@@ -7,10 +7,10 @@ import {
   Box,
   Link,
   FormHelperText,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
-
-const EMAIL_ERROR_MESSAGE: string = "Incorrect email";
-const PASSWORD_ERROR_MESSAGE: string = "Incorrect password";
+import { useState } from "react";
 
 type LoginFormProps = {
   email?: string;
@@ -31,6 +31,10 @@ const LoginForm = ({
   onPasswordChange,
   onSubmit,
 }: LoginFormProps) => {
+  const EMAIL_ERROR_MESSAGE: string = "Incorrect email";
+  const PASSWORD_ERROR_MESSAGE: string = "Incorrect password";
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <Container
       maxWidth="sm"
@@ -68,7 +72,7 @@ const LoginForm = ({
                 fullWidth
                 label="Password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 variant="outlined"
                 value={password}
                 onChange={onPasswordChange}
@@ -80,6 +84,18 @@ const LoginForm = ({
               )}
             </Grid>
             <Grid>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                    color="primary"
+                  />
+                }
+                label="Show password"
+              />
+            </Grid>
+            <Grid>
               <Button
                 fullWidth
                 variant="contained"
@@ -87,7 +103,7 @@ const LoginForm = ({
                 size="large"
                 type="submit"
                 formNoValidate
-                sx={{ mt: 2 }}
+                sx={{ mt: 1 }}
               >
                 Sign in
               </Button>
