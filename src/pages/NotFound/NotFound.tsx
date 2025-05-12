@@ -29,7 +29,7 @@ function NotFound(): React.ReactElement {
         alignItems={"center"}
       >
         <Typography variant="h2" component="h1" align="center" gutterBottom>
-          Not found (404)
+          Page not found
         </Typography>
         <Button
           variant="contained"

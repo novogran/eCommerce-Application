@@ -11,13 +11,18 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import type { Dayjs } from "dayjs";
 
 type RegistrationFormProps = {
   email?: string;
   password?: string;
   firstName?: string;
   lastName?: string;
-  dob?: string;
+  dob?: Dayjs;
   street?: string;
   city?: string;
   postalCode?: string;
@@ -110,36 +115,18 @@ function RegistrationForm({
                 </FormHelperText>
               )}
             </Grid>
-            <Grid>
-              <TextField
-                fullWidth
-                label="Password*"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                variant="outlined"
-                value={password}
-                onChange={onPasswordChange}
-              />
-              {!isPasswordValid && (
-                <FormHelperText error sx={{ mx: 0 }}>
-                  {ERROR_MESSAGE}
-                </FormHelperText>
-              )}
-            </Grid>
-            <Grid>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={showPassword}
-                    onChange={() => setShowPassword(!showPassword)}
-                    color="primary"
-                  />
-                }
-                label="Show password"
-              />
-            </Grid>
-            <Box display={"grid"} alignItems={"center"} gap={1} gridTemplateColumns={"1fr 1fr"}>
-              <Grid>
+            <Box
+              display={"grid"}
+              alignItems={"center"}
+              gap={1}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" } }}
+            >
+              <Grid
+                sx={{
+                  gridColumn: { xs: "1 / 2", sm: "1 / 2" },
+                  gridRow: { xs: "1 / 2", sm: "1 / 2" },
+                }}
+              >
                 <TextField
                   fullWidth
                   label="First Name*"
@@ -155,7 +142,34 @@ function RegistrationForm({
                   </FormHelperText>
                 )}
               </Grid>
-              <Grid>
+              <Grid
+                sx={{
+                  gridColumn: { xs: "1 / 2", sm: "2 / 3" },
+                  gridRow: { xs: "3 / 4", sm: "2 / 3" },
+                }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Date of Birth*"
+                    value={dob}
+                    onChange={onDobChange}
+                    sx={{ width: "100%" }}
+                    format="DD-MM-YYYY"
+                    disableHighlightToday
+                  />
+                </LocalizationProvider>
+                {!isDobValid && (
+                  <FormHelperText error sx={{ mx: 0 }}>
+                    {ERROR_MESSAGE}
+                  </FormHelperText>
+                )}
+              </Grid>
+              <Grid
+                sx={{
+                  gridColumn: { xs: "1 / 2", sm: "1 / 2" },
+                  gridRow: { xs: "2 / 3", sm: "2 / 3" },
+                }}
+              >
                 <TextField
                   fullWidth
                   label="Last Name*"
@@ -172,27 +186,12 @@ function RegistrationForm({
                 )}
               </Grid>
             </Box>
-            <Grid>
-              {/* <DatePicker
-                  format="DD.MM.YYYY"
-                  shouldReserveLeadingZeros
-                /> */}
-              <TextField
-                fullWidth
-                label="Date of Birth*"
-                name="dob"
-                type="date"
-                variant="outlined"
-                value={dob}
-                onChange={onDobChange}
-              />
-              {!isDobValid && (
-                <FormHelperText error sx={{ mx: 0 }}>
-                  {ERROR_MESSAGE}
-                </FormHelperText>
-              )}
-            </Grid>
-            <Box display={"grid"} alignItems={"center"} gap={1} gridTemplateColumns={"1fr 1fr"}>
+            <Box
+              display={"grid"}
+              alignItems={"center"}
+              gap={1}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}
+            >
               <Grid>
                 <TextField
                   fullWidth
@@ -226,7 +225,12 @@ function RegistrationForm({
                 )}
               </Grid>
             </Box>
-            <Box display={"grid"} alignItems={"center"} gap={1} gridTemplateColumns={"2fr 1fr"}>
+            <Box
+              display={"grid"}
+              alignItems={"center"}
+              gap={1}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}
+            >
               <Grid>
                 <TextField
                   fullWidth
@@ -261,6 +265,34 @@ function RegistrationForm({
               </Grid>
             </Box>
             <Grid>
+              <TextField
+                fullWidth
+                label="Password*"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                variant="outlined"
+                value={password}
+                onChange={onPasswordChange}
+              />
+              {!isPasswordValid && (
+                <FormHelperText error sx={{ mx: 0 }}>
+                  {ERROR_MESSAGE}
+                </FormHelperText>
+              )}
+            </Grid>
+            <Grid>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                    color="primary"
+                  />
+                }
+                label="Show password"
+              />
+            </Grid>
+            <Grid>
               <Button
                 fullWidth
                 variant="contained"
@@ -275,7 +307,7 @@ function RegistrationForm({
             </Grid>
             <Grid container>
               <Grid>
-                <Link href="/login" variant="body2">
+                <Link component={RouterLink} to="/login" variant="body2">
                   {"Have an account already? Sign In"}
                 </Link>
               </Grid>

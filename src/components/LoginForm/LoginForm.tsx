@@ -11,6 +11,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router";
 
 type LoginFormProps = {
   email?: string;
@@ -112,7 +113,7 @@ function LoginForm({
             </Grid>
             <Grid container>
               <Grid>
-                <Link href="/registration" variant="body2">
+                <Link component={RouterLink} to="/registration" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
