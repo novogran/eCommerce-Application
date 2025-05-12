@@ -22,7 +22,7 @@ type LoginFormProps = {
   onSubmit?: () => void;
 };
 
-const LoginForm = ({
+function LoginForm({
   email,
   password,
   isEmailValid,
@@ -30,7 +30,7 @@ const LoginForm = ({
   onEmailChange,
   onPasswordChange,
   onSubmit,
-}: LoginFormProps) => {
+}: LoginFormProps): React.ReactElement {
   const EMAIL_ERROR_MESSAGE: string = "Incorrect email";
   const PASSWORD_ERROR_MESSAGE: string = "Incorrect password";
   const [showPassword, setShowPassword] = useState(false);
@@ -46,9 +46,9 @@ const LoginForm = ({
       }}
     >
       <Box
-        sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "300px", sm: "500px" } }}
+        sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
       >
-        <Typography variant="h5" component="h1" align="center" gutterBottom>
+        <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign in
         </Typography>
         <form onSubmit={onSubmit}>
@@ -122,6 +122,6 @@ const LoginForm = ({
       </Box>
     </Container>
   );
-};
+}
 
 export default LoginForm;
