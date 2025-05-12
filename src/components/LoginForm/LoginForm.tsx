@@ -112,7 +112,7 @@ function LoginForm({
             </Grid>
             <Grid container>
               <Grid>
-                <Link href="#" variant="body2">
+                <Link href="/registration" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
