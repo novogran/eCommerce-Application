@@ -7,17 +7,16 @@ function NotFound(): React.ReactElement {
   return (
     <Box
       display={"flex"}
-      sx={{ flexDirection: { xs: "column", lg: "row" } }}
+      sx={{ flexDirection: { xs: "column", lg: "row" }, my: 3 }}
       alignItems={"center"}
       gap={"3rem"}
     >
       <Box
         component="img"
         src="../../../public/404.jpg"
-        alt="Descriptive text"
+        alt="404 error"
         sx={{
           width: { xs: "90%", sm: "100%" },
-          height: "auto",
           maxWidth: "350px",
           borderRadius: 2,
           boxShadow: 3,

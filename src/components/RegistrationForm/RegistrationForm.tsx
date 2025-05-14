@@ -27,15 +27,15 @@ type RegistrationFormProps = {
   city?: string;
   postalCode?: string;
   country?: string;
-  isEmailValid?: boolean;
-  isPasswordValid?: boolean;
-  isFirstNameValid?: boolean;
-  isLastNameValid?: boolean;
-  isDobValid?: boolean;
-  isStreetValid?: boolean;
-  isCityValid?: boolean;
-  isPostalCodeValid?: boolean;
-  isCountryValid?: boolean;
+  emailErrorText?: string | null;
+  passwordErrorText?: string | null;
+  firstNameErrorText?: string | null;
+  lastNameErrorText?: string | null;
+  dobErrorText?: string | null;
+  streetErrorText?: string | null;
+  cityErrorText?: string | null;
+  postalCodeErrorText?: string | null;
+  countryErrorText?: string | null;
   onEmailChange?: () => void;
   onPasswordChange?: () => void;
   onFirstNameChange?: () => void;
@@ -58,15 +58,15 @@ function RegistrationForm({
   city,
   postalCode,
   country,
-  isEmailValid,
-  isPasswordValid,
-  isFirstNameValid,
-  isLastNameValid,
-  isDobValid,
-  isStreetValid,
-  isCityValid,
-  isPostalCodeValid,
-  isCountryValid,
+  emailErrorText,
+  passwordErrorText,
+  firstNameErrorText,
+  lastNameErrorText,
+  dobErrorText,
+  streetErrorText,
+  cityErrorText,
+  postalCodeErrorText,
+  countryErrorText,
   onEmailChange,
   onPasswordChange,
   onFirstNameChange,
@@ -78,7 +78,6 @@ function RegistrationForm({
   onCountryChange,
   onSubmit,
 }: RegistrationFormProps): React.ReactElement {
-  const ERROR_MESSAGE: string = "Incorrect";
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -92,13 +91,13 @@ function RegistrationForm({
       }}
     >
       <Box
-        sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
+        sx={{ my: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
       >
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign up
         </Typography>
         <form onSubmit={onSubmit}>
-          <Grid container spacing={0.5} direction="column">
+          <Grid container spacing={1} direction="column">
             <Grid>
               <TextField
                 fullWidth
@@ -109,15 +108,15 @@ function RegistrationForm({
                 value={email}
                 onChange={onEmailChange}
               />
-              {!isEmailValid && (
+              {!!emailErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {ERROR_MESSAGE}
+                  {emailErrorText}
                 </FormHelperText>
               )}
             </Grid>
             <Box
               display={"grid"}
-              alignItems={"center"}
+              alignItems={"start"}
               gap={1}
               sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" } }}
             >
@@ -136,9 +135,9 @@ function RegistrationForm({
                   value={firstName}
                   onChange={onFirstNameChange}
                 />
-                {!isFirstNameValid && (
+                {!!firstNameErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {firstNameErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -158,9 +157,9 @@ function RegistrationForm({
                     disableHighlightToday
                   />
                 </LocalizationProvider>
-                {!isDobValid && (
+                {!!dobErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {dobErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -179,16 +178,16 @@ function RegistrationForm({
                   value={lastName}
                   onChange={onLastNameChange}
                 />
-                {!isLastNameValid && (
+                {!!lastNameErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {lastNameErrorText}
                   </FormHelperText>
                 )}
               </Grid>
             </Box>
             <Box
               display={"grid"}
-              alignItems={"center"}
+              alignItems={"start"}
               gap={1}
               sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}
             >
@@ -202,9 +201,9 @@ function RegistrationForm({
                   value={country}
                   onChange={onCountryChange}
                 />
-                {!isCountryValid && (
+                {!!countryErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {countryErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -218,18 +217,18 @@ function RegistrationForm({
                   value={city}
                   onChange={onCityChange}
                 />
-                {!isCityValid && (
+                {!!cityErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {cityErrorText}
                   </FormHelperText>
                 )}
               </Grid>
             </Box>
             <Box
               display={"grid"}
-              alignItems={"center"}
+              alignItems={"start"}
               gap={1}
-              sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" } }}
             >
               <Grid>
                 <TextField
@@ -241,9 +240,9 @@ function RegistrationForm({
                   value={street}
                   onChange={onStreetChange}
                 />
-                {!isStreetValid && (
+                {!!streetErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {streetErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -257,9 +256,9 @@ function RegistrationForm({
                   value={postalCode}
                   onChange={onPostalCodeChange}
                 />
-                {!isPostalCodeValid && (
+                {!!postalCodeErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {ERROR_MESSAGE}
+                    {postalCodeErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -274,9 +273,9 @@ function RegistrationForm({
                 value={password}
                 onChange={onPasswordChange}
               />
-              {!isPasswordValid && (
+              {!!passwordErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {ERROR_MESSAGE}
+                  {passwordErrorText}
                 </FormHelperText>
               )}
             </Grid>

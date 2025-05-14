@@ -16,8 +16,8 @@ import { Link as RouterLink } from "react-router";
 type LoginFormProps = {
   email?: string;
   password?: string;
-  isEmailValid?: boolean;
-  isPasswordValid?: boolean;
+  emailErrorText?: string | null;
+  passwordErrorText?: string | null;
   onEmailChange?: () => void;
   onPasswordChange?: () => void;
   onSubmit?: () => void;
@@ -26,14 +26,12 @@ type LoginFormProps = {
 function LoginForm({
   email,
   password,
-  isEmailValid,
-  isPasswordValid,
+  emailErrorText,
+  passwordErrorText,
   onEmailChange,
   onPasswordChange,
   onSubmit,
 }: LoginFormProps): React.ReactElement {
-  const EMAIL_ERROR_MESSAGE: string = "Incorrect email";
-  const PASSWORD_ERROR_MESSAGE: string = "Incorrect password";
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -47,7 +45,7 @@ function LoginForm({
       }}
     >
       <Box
-        sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
+        sx={{ my: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
       >
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign in
@@ -64,9 +62,9 @@ function LoginForm({
                 value={email}
                 onChange={onEmailChange}
               />
-              {!isEmailValid && (
+              {!!emailErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {EMAIL_ERROR_MESSAGE}
+                  {emailErrorText}
                 </FormHelperText>
               )}
             </Grid>
@@ -80,9 +78,9 @@ function LoginForm({
                 value={password}
                 onChange={onPasswordChange}
               />
-              {!isPasswordValid && (
+              {!!passwordErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {PASSWORD_ERROR_MESSAGE}
+                  {passwordErrorText}
                 </FormHelperText>
               )}
             </Grid>
