@@ -15,67 +15,22 @@ import { Link as RouterLink } from "react-router";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import type { Dayjs } from "dayjs";
+import type { UserRegistration } from "../../shared/types/UserRegistration";
+import type { UserRegistrationErrorText } from "../../shared/types/UserRegistrationErrorText";
 
 type RegistrationFormProps = {
-  email?: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
-  dob?: Dayjs;
-  street?: string;
-  city?: string;
-  postalCode?: string;
-  country?: string;
-  emailErrorText?: string | null;
-  passwordErrorText?: string | null;
-  firstNameErrorText?: string | null;
-  lastNameErrorText?: string | null;
-  dobErrorText?: string | null;
-  streetErrorText?: string | null;
-  cityErrorText?: string | null;
-  postalCodeErrorText?: string | null;
-  countryErrorText?: string | null;
-  onEmailChange?: () => void;
-  onPasswordChange?: () => void;
-  onFirstNameChange?: () => void;
-  onLastNameChange?: () => void;
-  onDobChange?: () => void;
-  onStreetChange?: () => void;
-  onCityChange?: () => void;
-  onPostalCodeChange?: () => void;
-  onCountryChange?: () => void;
+  userProps?: UserRegistration;
+  errorTextProps?: UserRegistrationErrorText;
+  onUserPropsChange?: () => void;
+  useDefaultAddress?: boolean;
   onSubmit?: () => void;
 };
 
 function RegistrationForm({
-  email,
-  password,
-  firstName,
-  lastName,
-  dob,
-  street,
-  city,
-  postalCode,
-  country,
-  emailErrorText,
-  passwordErrorText,
-  firstNameErrorText,
-  lastNameErrorText,
-  dobErrorText,
-  streetErrorText,
-  cityErrorText,
-  postalCodeErrorText,
-  countryErrorText,
-  onEmailChange,
-  onPasswordChange,
-  onFirstNameChange,
-  onLastNameChange,
-  onDobChange,
-  onStreetChange,
-  onCityChange,
-  onPostalCodeChange,
-  onCountryChange,
+  userProps,
+  errorTextProps,
+  onUserPropsChange,
+  useDefaultAddress,
   onSubmit,
 }: RegistrationFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
@@ -105,12 +60,12 @@ function RegistrationForm({
                 name="email"
                 type="email"
                 variant="outlined"
-                value={email}
-                onChange={onEmailChange}
+                value={userProps?.email}
+                onChange={onUserPropsChange}
               />
-              {!!emailErrorText && (
+              {!!errorTextProps?.emailErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {emailErrorText}
+                  {errorTextProps?.emailErrorText}
                 </FormHelperText>
               )}
             </Grid>
@@ -118,7 +73,7 @@ function RegistrationForm({
               display={"grid"}
               alignItems={"start"}
               gap={1}
-              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" } }}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" }, alignContent: "start" }}
             >
               <Grid
                 sx={{
@@ -132,12 +87,12 @@ function RegistrationForm({
                   name="firstName"
                   type="text"
                   variant="outlined"
-                  value={firstName}
-                  onChange={onFirstNameChange}
+                  value={userProps?.firstName}
+                  onChange={onUserPropsChange}
                 />
-                {!!firstNameErrorText && (
+                {!!errorTextProps?.firstNameErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {firstNameErrorText}
+                    {errorTextProps?.firstNameErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -150,16 +105,16 @@ function RegistrationForm({
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Date of Birth*"
-                    value={dob}
-                    onChange={onDobChange}
+                    value={userProps?.dob}
+                    onChange={onUserPropsChange}
                     sx={{ width: "100%" }}
                     format="DD-MM-YYYY"
                     disableHighlightToday
                   />
                 </LocalizationProvider>
-                {!!dobErrorText && (
+                {!!errorTextProps?.dobErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {dobErrorText}
+                    {errorTextProps?.dobErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -175,12 +130,12 @@ function RegistrationForm({
                   name="lastName"
                   type="text"
                   variant="outlined"
-                  value={lastName}
-                  onChange={onLastNameChange}
+                  value={userProps?.lastName}
+                  onChange={onUserPropsChange}
                 />
-                {!!lastNameErrorText && (
+                {!!errorTextProps?.lastNameErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {lastNameErrorText}
+                    {errorTextProps?.lastNameErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -189,7 +144,7 @@ function RegistrationForm({
               display={"grid"}
               alignItems={"start"}
               gap={1}
-              sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" } }}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "start" }}
             >
               <Grid>
                 <TextField
@@ -198,12 +153,12 @@ function RegistrationForm({
                   name="country"
                   type="text"
                   variant="outlined"
-                  value={country}
-                  onChange={onCountryChange}
+                  value={userProps?.country}
+                  onChange={onUserPropsChange}
                 />
-                {!!countryErrorText && (
+                {!!errorTextProps?.countryErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {countryErrorText}
+                    {errorTextProps?.countryErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -214,12 +169,12 @@ function RegistrationForm({
                   name="city"
                   type="text"
                   variant="outlined"
-                  value={city}
-                  onChange={onCityChange}
+                  value={userProps?.city}
+                  onChange={onUserPropsChange}
                 />
-                {!!cityErrorText && (
+                {!!errorTextProps?.cityErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {cityErrorText}
+                    {errorTextProps?.cityErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -228,7 +183,7 @@ function RegistrationForm({
               display={"grid"}
               alignItems={"start"}
               gap={1}
-              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" } }}
+              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" }, alignContent: "start" }}
             >
               <Grid>
                 <TextField
@@ -237,12 +192,12 @@ function RegistrationForm({
                   name="street"
                   type="text"
                   variant="outlined"
-                  value={street}
-                  onChange={onStreetChange}
+                  value={userProps?.street}
+                  onChange={onUserPropsChange}
                 />
-                {!!streetErrorText && (
+                {!!errorTextProps?.streetErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {streetErrorText}
+                    {errorTextProps?.streetErrorText}
                   </FormHelperText>
                 )}
               </Grid>
@@ -253,34 +208,31 @@ function RegistrationForm({
                   name="postalCode"
                   type="text"
                   variant="outlined"
-                  value={postalCode}
-                  onChange={onPostalCodeChange}
+                  value={userProps?.postalCode}
+                  onChange={onUserPropsChange}
                 />
-                {!!postalCodeErrorText && (
+                {!!errorTextProps?.postalCodeErrorText && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {postalCodeErrorText}
+                    {errorTextProps?.postalCodeErrorText}
                   </FormHelperText>
                 )}
               </Grid>
             </Box>
-            <Grid>
-              <TextField
-                fullWidth
-                label="Password*"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                variant="outlined"
-                value={password}
-                onChange={onPasswordChange}
-              />
-              {!!passwordErrorText && (
-                <FormHelperText error sx={{ mx: 0 }}>
-                  {passwordErrorText}
-                </FormHelperText>
-              )}
-            </Grid>
-            <Grid>
+            <Grid
+              display={"grid"}
+              alignItems={"start"}
+              gap={1}
+              sx={{
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                alignContent: "start",
+                mx: { xs: 0, sm: 2 },
+              }}
+            >
               <FormControlLabel
+                sx={{
+                  gridColumn: { xs: "1 / 2", sm: "1 / 2" },
+                  gridRow: { xs: "2 / 3", sm: "1 / 2" },
+                }}
                 control={
                   <Checkbox
                     checked={showPassword}
@@ -290,6 +242,36 @@ function RegistrationForm({
                 }
                 label="Show password"
               />
+              <FormControlLabel
+                sx={{
+                  gridColumn: { xs: "1 / 2", sm: "2 / 3" },
+                  gridRow: { xs: "1 / 2", sm: "1 / 2" },
+                }}
+                control={
+                  <Checkbox
+                    checked={useDefaultAddress}
+                    onChange={() => (useDefaultAddress = !useDefaultAddress)}
+                    color="primary"
+                  />
+                }
+                label="Use address as default"
+              />
+            </Grid>
+            <Grid>
+              <TextField
+                fullWidth
+                label="Password*"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                variant="outlined"
+                value={userProps?.password}
+                onChange={onUserPropsChange}
+              />
+              {!!errorTextProps?.passwordErrorText && (
+                <FormHelperText error sx={{ mx: 0 }}>
+                  {errorTextProps?.passwordErrorText}
+                </FormHelperText>
+              )}
             </Grid>
             <Grid>
               <Button
