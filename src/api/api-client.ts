@@ -1,5 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
-import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api-types";
+import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api.types";
+import { setAuthToken } from "../shared/utils/auth-token";
 
 const CONFIG = {
   clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
@@ -57,6 +58,8 @@ async function getToken(
       config
     );
 
+    setAuthToken(response.data.access_token);
+
     return response.data;
   } catch (error) {
     return handleRequestError(error);
@@ -67,7 +70,7 @@ export const authService = {
   async getAnonymousToken(): Promise<TokenResponse> {
     const params = new URLSearchParams({
       grant_type: "client_credentials",
-      scope: CONFIG.scopes.anonymous.map((s) => `${s}:${CONFIG.projectKey}`).join(" "),
+      scope: CONFIG.scopes.anonymous.map((scope) => `${scope}:${CONFIG.projectKey}`).join(" "),
     });
 
     return getToken(params);
@@ -78,7 +81,7 @@ export const authService = {
       grant_type: "password",
       username: email,
       password,
-      scope: CONFIG.scopes.customer.map((s) => `${s}:${CONFIG.projectKey}`).join(" "),
+      scope: CONFIG.scopes.customer.map((scope) => `${scope}:${CONFIG.projectKey}`).join(" "),
     });
 
     return getToken(params, "bearer");
@@ -114,34 +117,6 @@ export const customerService = {
     } catch (error) {
       return handleRequestError(error);
     }
-  },
-
-  async setDefaultBillingAndShippingAddresses(
-    customerData: Customer,
-    token: string
-  ): Promise<void> {
-    axios.post(
-      `${API_URL}/me`,
-      {
-        version: customerData.version,
-        actions: [
-          {
-            action: "setDefaultShippingAddress",
-            addressId: customerData.addresses[0].id,
-          },
-          {
-            action: "setDefaultBillingAddress",
-            addressId: customerData.addresses[0].id,
-          },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
   },
 
   async login(email: string, password: string): Promise<Customer> {
