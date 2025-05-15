@@ -4,7 +4,7 @@ import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api
 const CONFIG = {
   clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
   clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET || "",
-  region: import.meta.env.VITE_CTP_PROJECT_KEY,
+  region: import.meta.env.VITE_CTP_PROJECT_REGION,
   projectKey: import.meta.env.VITE_CTP_PROJECT_KEY,
   scopes: {
     anonymous: [
