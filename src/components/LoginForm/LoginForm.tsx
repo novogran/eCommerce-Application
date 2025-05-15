@@ -21,6 +21,7 @@ export type LoginFormProps = {
   onEmailChange?: () => void;
   onPasswordChange?: () => void;
   onSubmit?: () => void;
+  submitError?: string | null;
 };
 
 function LoginForm({
@@ -31,6 +32,7 @@ function LoginForm({
   onEmailChange,
   onPasswordChange,
   onSubmit,
+  submitError,
 }: LoginFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -96,6 +98,11 @@ function LoginForm({
                 label="Show password"
               />
             </Grid>
+            {!!submitError && (
+              <FormHelperText error sx={{ mx: 0 }}>
+                {submitError}
+              </FormHelperText>
+            )}
             <Grid>
               <Button
                 fullWidth

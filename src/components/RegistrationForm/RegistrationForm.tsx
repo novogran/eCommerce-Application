@@ -30,6 +30,7 @@ type RegistrationFormProps = {
   errorTextProps?: UserRegistrationErrorText;
   onUserPropsChange?: () => void;
   onSubmit?: () => void;
+  submitError?: string | null;
 };
 
 function RegistrationForm({
@@ -37,6 +38,7 @@ function RegistrationForm({
   errorTextProps,
   onUserPropsChange,
   onSubmit,
+  submitError,
 }: RegistrationFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
   const [useOneAddress, setUseOneAddress] = useState(false);
@@ -198,6 +200,11 @@ function RegistrationForm({
                 </FormHelperText>
               )}
             </Grid>
+            {!!submitError && (
+              <FormHelperText error sx={{ mx: 0 }}>
+                {submitError}
+              </FormHelperText>
+            )}
             <Grid>
               <Button
                 fullWidth
