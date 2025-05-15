@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import type { Customer, CustomerDraft, TokenResponse } from "../shared/utils/types/api-types";
 
 const CONFIG = {
   clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
@@ -23,49 +24,6 @@ const CONFIG = {
     ],
   },
 };
-
-interface CustomerDraft {
-  email: string;
-  password: string;
-  firstName?: string;
-  lastName?: string;
-  dateOfBirth?: string;
-  postalCode?: string;
-  addresses?: {
-    postalCode?: string;
-    streetName?: string;
-    city?: string;
-    country: string;
-  }[];
-  defaultShippingAddress?: number;
-  defaultBillingAddress?: number;
-}
-
-interface Customer {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  isEmailVerified: boolean;
-  version: number;
-  createdAt: string;
-  lastModifiedAt: string;
-  authenticationMode: "Password";
-  addresses: {
-    id: string;
-    streetName?: string;
-    city?: string;
-    country: string;
-  }[];
-}
-
-interface TokenResponse {
-  access_token: string;
-  expires_in: number;
-  refresh_token?: string;
-  token_type: string;
-  scope: string;
-}
 
 const AUTH_URL = `https://auth.${CONFIG.region}.gcp.commercetools.com/oauth`;
 const API_URL = `https://api.${CONFIG.region}.gcp.commercetools.com/${CONFIG.projectKey}`;
