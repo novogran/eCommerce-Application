@@ -3,7 +3,7 @@ import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 const CONFIG = {
   clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
   clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET || "",
-  region: "europe-west1",
+  region: import.meta.env.VITE_CTP_PROJECT_KEY,
   projectKey: import.meta.env.VITE_CTP_PROJECT_KEY,
   scopes: {
     anonymous: [
