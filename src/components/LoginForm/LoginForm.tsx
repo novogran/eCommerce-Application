@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import { Link as RouterLink } from "react-router";
 
-type LoginFormProps = {
+export type LoginFormProps = {
   email?: string;
   password?: string;
   emailErrorText?: string | null;

@@ -22,6 +22,8 @@ import type {
   AddressErrorText,
 } from "../../shared/types/UserRegistration";
 import type { Address } from "../../shared/types/Address";
+import "./RegistrationForm.css";
+import dayjs from "dayjs";
 
 type RegistrationFormProps = {
   userProps?: UserRegistration;
@@ -40,6 +42,7 @@ function RegistrationForm({
   const [useOneAddress, setUseOneAddress] = useState(false);
   const [shippingAddress, setShippingAddress] = useState({});
   const [billingAddress, setBillingAddress] = useState({});
+  const minDate = dayjs().subtract(13, "year");
 
   return (
     <Container
@@ -58,7 +61,7 @@ function RegistrationForm({
           Sign up
         </Typography>
         <form onSubmit={onSubmit}>
-          <Grid container spacing={0.5} direction="column">
+          <Grid container spacing={1} direction="column">
             <Grid>
               <TextField
                 fullWidth
@@ -116,6 +119,8 @@ function RegistrationForm({
                     sx={{ width: "100%" }}
                     format="DD-MM-YYYY"
                     disableHighlightToday
+                    className="date-picker"
+                    maxDate={minDate}
                   />
                 </LocalizationProvider>
                 {!!errorTextProps?.dobErrorText && (
@@ -163,8 +168,9 @@ function RegistrationForm({
             />
             <AddressField
               addressTitle="Billing address"
-              address={useOneAddress ? billingAddress : setShippingAddress}
+              address={billingAddress}
               setAddress={setBillingAddress}
+              isDisabled={useOneAddress}
             />
             <FormControlLabel
               control={
@@ -226,6 +232,7 @@ type AddressFormProps = {
   errorText?: AddressErrorText;
   useDefaultAddress?: boolean;
   setUseDefaultAddress?: Dispatch<SetStateAction<boolean>>;
+  isDisabled?: boolean;
 };
 
 function AddressField({
@@ -235,6 +242,7 @@ function AddressField({
   errorText,
   useDefaultAddress,
   setUseDefaultAddress,
+  isDisabled,
 }: AddressFormProps): React.ReactElement {
   return (
     <Box>
@@ -271,8 +279,9 @@ function AddressField({
             name="country"
             type="text"
             variant="outlined"
+            disabled={isDisabled}
             value={address.country}
-            onChange={(e) => setAddress?.((prev) => ({ ...prev, country: e.target.value }))}
+            onChange={() => setAddress}
           />
           {!!errorText?.countryErrorText && (
             <FormHelperText error sx={{ mx: 0 }}>
@@ -287,8 +296,9 @@ function AddressField({
             name="city"
             type="text"
             variant="outlined"
+            disabled={isDisabled}
             value={address.city}
-            onChange={(e) => setAddress?.((prev) => ({ ...prev, city: e.target.value }))}
+            onChange={() => setAddress}
           />
           {!!errorText?.cityErrorText && (
             <FormHelperText error sx={{ mx: 0 }}>
@@ -311,8 +321,9 @@ function AddressField({
             name="street"
             type="text"
             variant="outlined"
+            disabled={isDisabled}
             value={address.street}
-            onChange={(e) => setAddress?.((prev) => ({ ...prev, street: e.target.value }))}
+            onChange={() => setAddress}
           />
           {!!errorText?.streetErrorText && (
             <FormHelperText error sx={{ mx: 0 }}>
@@ -327,8 +338,9 @@ function AddressField({
             name="postalCode"
             type="text"
             variant="outlined"
+            disabled={isDisabled}
             value={address.postalCode}
-            onChange={(e) => setAddress?.((prev) => ({ ...prev, postalCode: e.target.value }))}
+            onChange={() => setAddress}
           />
           {!!errorText?.postalCodeErrorText && (
             <FormHelperText error sx={{ mx: 0 }}>
