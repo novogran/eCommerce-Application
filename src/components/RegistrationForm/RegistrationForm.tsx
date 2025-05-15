@@ -11,18 +11,22 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Link as RouterLink } from "react-router";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import type { UserRegistration } from "../../shared/types/UserRegistration";
-import type { UserRegistrationErrorText } from "../../shared/types/UserRegistrationErrorText";
+import type {
+  UserRegistration,
+  UserRegistrationErrorText,
+  AddressErrorText,
+} from "../../shared/types/UserRegistration";
+import type { Address } from "../../shared/types/Address";
 
 type RegistrationFormProps = {
   userProps?: UserRegistration;
   errorTextProps?: UserRegistrationErrorText;
   onUserPropsChange?: () => void;
-  useDefaultAddress?: boolean;
   onSubmit?: () => void;
 };
 
@@ -30,10 +34,12 @@ function RegistrationForm({
   userProps,
   errorTextProps,
   onUserPropsChange,
-  useDefaultAddress,
   onSubmit,
 }: RegistrationFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
+  const [useOneAddress, setUseOneAddress] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState({});
+  const [billingAddress, setBillingAddress] = useState({});
 
   return (
     <Container
@@ -52,7 +58,7 @@ function RegistrationForm({
           Sign up
         </Typography>
         <form onSubmit={onSubmit}>
-          <Grid container spacing={1} direction="column">
+          <Grid container spacing={0.5} direction="column">
             <Grid>
               <TextField
                 fullWidth
@@ -140,123 +146,36 @@ function RegistrationForm({
                 )}
               </Grid>
             </Box>
-            <Box
-              display={"grid"}
-              alignItems={"start"}
-              gap={1}
-              sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "start" }}
-            >
-              <Grid>
-                <TextField
-                  fullWidth
-                  label="Country*"
-                  name="country"
-                  type="text"
-                  variant="outlined"
-                  value={userProps?.country}
-                  onChange={onUserPropsChange}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={useOneAddress}
+                  onChange={() => setUseOneAddress(!useOneAddress)}
+                  color="primary"
                 />
-                {!!errorTextProps?.countryErrorText && (
-                  <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.countryErrorText}
-                  </FormHelperText>
-                )}
-              </Grid>
-              <Grid>
-                <TextField
-                  fullWidth
-                  label="City*"
-                  name="city"
-                  type="text"
-                  variant="outlined"
-                  value={userProps?.city}
-                  onChange={onUserPropsChange}
+              }
+              label="Use one address for both shipping and billing"
+            />
+            <AddressField
+              addressTitle="Shipping address"
+              address={shippingAddress}
+              setAddress={setShippingAddress}
+            />
+            <AddressField
+              addressTitle="Billing address"
+              address={useOneAddress ? billingAddress : setShippingAddress}
+              setAddress={setBillingAddress}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                  color="primary"
                 />
-                {!!errorTextProps?.cityErrorText && (
-                  <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.cityErrorText}
-                  </FormHelperText>
-                )}
-              </Grid>
-            </Box>
-            <Box
-              display={"grid"}
-              alignItems={"start"}
-              gap={1}
-              sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" }, alignContent: "start" }}
-            >
-              <Grid>
-                <TextField
-                  fullWidth
-                  label="Street*"
-                  name="street"
-                  type="text"
-                  variant="outlined"
-                  value={userProps?.street}
-                  onChange={onUserPropsChange}
-                />
-                {!!errorTextProps?.streetErrorText && (
-                  <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.streetErrorText}
-                  </FormHelperText>
-                )}
-              </Grid>
-              <Grid>
-                <TextField
-                  fullWidth
-                  label="Postal Code*"
-                  name="postalCode"
-                  type="text"
-                  variant="outlined"
-                  value={userProps?.postalCode}
-                  onChange={onUserPropsChange}
-                />
-                {!!errorTextProps?.postalCodeErrorText && (
-                  <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.postalCodeErrorText}
-                  </FormHelperText>
-                )}
-              </Grid>
-            </Box>
-            <Grid
-              display={"grid"}
-              alignItems={"start"}
-              gap={1}
-              sx={{
-                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                alignContent: "start",
-                mx: { xs: 0, sm: 2 },
-              }}
-            >
-              <FormControlLabel
-                sx={{
-                  gridColumn: { xs: "1 / 2", sm: "1 / 2" },
-                  gridRow: { xs: "2 / 3", sm: "1 / 2" },
-                }}
-                control={
-                  <Checkbox
-                    checked={showPassword}
-                    onChange={() => setShowPassword(!showPassword)}
-                    color="primary"
-                  />
-                }
-                label="Show password"
-              />
-              <FormControlLabel
-                sx={{
-                  gridColumn: { xs: "1 / 2", sm: "2 / 3" },
-                  gridRow: { xs: "1 / 2", sm: "1 / 2" },
-                }}
-                control={
-                  <Checkbox
-                    checked={useDefaultAddress}
-                    onChange={() => (useDefaultAddress = !useDefaultAddress)}
-                    color="primary"
-                  />
-                }
-                label="Use address as default"
-              />
-            </Grid>
+              }
+              label="Show password"
+            />
             <Grid>
               <TextField
                 fullWidth
@@ -297,6 +216,128 @@ function RegistrationForm({
         </form>
       </Box>
     </Container>
+  );
+}
+
+type AddressFormProps = {
+  addressTitle: string;
+  address: Address;
+  setAddress: Dispatch<SetStateAction<Address>>;
+  errorText?: AddressErrorText;
+  useDefaultAddress?: boolean;
+  setUseDefaultAddress?: Dispatch<SetStateAction<boolean>>;
+};
+
+function AddressField({
+  addressTitle,
+  address,
+  setAddress,
+  errorText,
+  useDefaultAddress,
+  setUseDefaultAddress,
+}: AddressFormProps): React.ReactElement {
+  return (
+    <Box>
+      <Box
+        display={"grid"}
+        alignItems={"start"}
+        gap={1}
+        sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "start" }}
+      >
+        <Typography variant="h5" component="h1" align="left" gutterBottom my={0.5}>
+          {addressTitle}
+        </Typography>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={useDefaultAddress}
+              onChange={() => setUseDefaultAddress}
+              color="primary"
+            />
+          }
+          label="Use address as default"
+        />
+      </Box>
+      <Box
+        display={"grid"}
+        alignItems={"center"}
+        gap={1}
+        sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "center" }}
+      >
+        <Grid>
+          <TextField
+            fullWidth
+            label="Country*"
+            name="country"
+            type="text"
+            variant="outlined"
+            value={address.country}
+            onChange={(e) => setAddress?.((prev) => ({ ...prev, country: e.target.value }))}
+          />
+          {!!errorText?.countryErrorText && (
+            <FormHelperText error sx={{ mx: 0 }}>
+              {errorText?.countryErrorText}
+            </FormHelperText>
+          )}
+        </Grid>
+        <Grid>
+          <TextField
+            fullWidth
+            label="City*"
+            name="city"
+            type="text"
+            variant="outlined"
+            value={address.city}
+            onChange={(e) => setAddress?.((prev) => ({ ...prev, city: e.target.value }))}
+          />
+          {!!errorText?.cityErrorText && (
+            <FormHelperText error sx={{ mx: 0 }}>
+              {errorText?.cityErrorText}
+            </FormHelperText>
+          )}
+        </Grid>
+      </Box>
+      <Box
+        display={"grid"}
+        alignItems={"center"}
+        gap={1}
+        mt={1}
+        sx={{ gridTemplateColumns: { xs: "1fr", sm: "3fr 2fr" }, alignContent: "center" }}
+      >
+        <Grid>
+          <TextField
+            fullWidth
+            label="Street*"
+            name="street"
+            type="text"
+            variant="outlined"
+            value={address.street}
+            onChange={(e) => setAddress?.((prev) => ({ ...prev, street: e.target.value }))}
+          />
+          {!!errorText?.streetErrorText && (
+            <FormHelperText error sx={{ mx: 0 }}>
+              {errorText?.streetErrorText}
+            </FormHelperText>
+          )}
+        </Grid>
+        <Grid>
+          <TextField
+            fullWidth
+            label="Postal Code*"
+            name="postalCode"
+            type="text"
+            variant="outlined"
+            value={address.postalCode}
+            onChange={(e) => setAddress?.((prev) => ({ ...prev, postalCode: e.target.value }))}
+          />
+          {!!errorText?.postalCodeErrorText && (
+            <FormHelperText error sx={{ mx: 0 }}>
+              {errorText?.postalCodeErrorText}
+            </FormHelperText>
+          )}
+        </Grid>
+      </Box>
+    </Box>
   );
 }
 
