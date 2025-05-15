@@ -1,5 +1,5 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
-import type { Customer, CustomerDraft, TokenResponse } from "../shared/utils/types/api-types";
+import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api-types";
 
 const CONFIG = {
   clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
