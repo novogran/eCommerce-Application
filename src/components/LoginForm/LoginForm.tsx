@@ -11,28 +11,29 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useState } from "react";
+import { NavLink } from "react-router";
 
-type LoginFormProps = {
+export type LoginFormProps = {
   email?: string;
   password?: string;
-  isEmailValid?: boolean;
-  isPasswordValid?: boolean;
+  emailErrorText?: string | null;
+  passwordErrorText?: string | null;
   onEmailChange?: () => void;
   onPasswordChange?: () => void;
   onSubmit?: () => void;
+  submitError?: string | null;
 };
 
-const LoginForm = ({
+function LoginForm({
   email,
   password,
-  isEmailValid,
-  isPasswordValid,
+  emailErrorText,
+  passwordErrorText,
   onEmailChange,
   onPasswordChange,
   onSubmit,
-}: LoginFormProps) => {
-  const EMAIL_ERROR_MESSAGE: string = "Incorrect email";
-  const PASSWORD_ERROR_MESSAGE: string = "Incorrect password";
+  submitError,
+}: LoginFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -46,9 +47,9 @@ const LoginForm = ({
       }}
     >
       <Box
-        sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "300px", sm: "500px" } }}
+        sx={{ my: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
       >
-        <Typography variant="h5" component="h1" align="center" gutterBottom>
+        <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign in
         </Typography>
         <form onSubmit={onSubmit}>
@@ -63,9 +64,9 @@ const LoginForm = ({
                 value={email}
                 onChange={onEmailChange}
               />
-              {!isEmailValid && (
+              {!!emailErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {EMAIL_ERROR_MESSAGE}
+                  {emailErrorText}
                 </FormHelperText>
               )}
             </Grid>
@@ -79,9 +80,9 @@ const LoginForm = ({
                 value={password}
                 onChange={onPasswordChange}
               />
-              {!isPasswordValid && (
+              {!!passwordErrorText && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {PASSWORD_ERROR_MESSAGE}
+                  {passwordErrorText}
                 </FormHelperText>
               )}
             </Grid>
@@ -97,6 +98,11 @@ const LoginForm = ({
                 label="Show password"
               />
             </Grid>
+            {!!submitError && (
+              <FormHelperText error sx={{ mx: 0 }}>
+                {submitError}
+              </FormHelperText>
+            )}
             <Grid>
               <Button
                 fullWidth
@@ -112,9 +118,9 @@ const LoginForm = ({
             </Grid>
             <Grid container>
               <Grid>
-                <Link href="#" variant="body2">
+                <NavLink to="/registration">
                   {"Don't have an account? Sign Up"}
-                </Link>
+                </NavLink>
               </Grid>
             </Grid>
           </Grid>
@@ -122,6 +128,6 @@ const LoginForm = ({
       </Box>
     </Container>
   );
-};
+}
 
 export default LoginForm;

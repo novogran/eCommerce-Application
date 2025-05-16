@@ -33,6 +33,7 @@ export default tseslint.config(
       "react/react-in-jsx-scope": "off",
       "unicorn/no-null": "error",
       "prettier/prettier": "error",
+      '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: 'NavLink' }]
     },
   }
 );
