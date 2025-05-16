@@ -1,19 +1,19 @@
 import { Grid, Link } from "@mui/material";
-import { Link as RouterLink } from "react-router";
+import { NavLink } from "react-router";
 
 function MainPage() {
   return (
     <Grid display={"flex"} gap={1}>
       MainPage
-      <Link component={RouterLink} to="/login" variant="body2">
+      <NavLink to="/login">
         Login Page
-      </Link>
-      <Link component={RouterLink} to="/registration" variant="body2">
+      </NavLink>
+      <NavLink to="/registration">
         Registration Page
-      </Link>
-      <Link component={RouterLink} to="/error" variant="body2">
+      </NavLink>
+      <NavLink to="/error">
         Not Found Page
-      </Link>
+      </NavLink>
     </Grid>
   );
 }

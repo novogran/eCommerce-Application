@@ -11,7 +11,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useState } from "react";
-import { Link as RouterLink } from "react-router";
+import { NavLink } from "react-router";
 
 export type LoginFormProps = {
   email?: string;
@@ -21,6 +21,7 @@ export type LoginFormProps = {
   onEmailChange?: () => void;
   onPasswordChange?: () => void;
   onSubmit?: () => void;
+  submitError?: string | null;
 };
 
 function LoginForm({
@@ -31,6 +32,7 @@ function LoginForm({
   onEmailChange,
   onPasswordChange,
   onSubmit,
+  submitError,
 }: LoginFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -96,6 +98,11 @@ function LoginForm({
                 label="Show password"
               />
             </Grid>
+            {!!submitError && (
+              <FormHelperText error sx={{ mx: 0 }}>
+                {submitError}
+              </FormHelperText>
+            )}
             <Grid>
               <Button
                 fullWidth
@@ -111,9 +118,9 @@ function LoginForm({
             </Grid>
             <Grid container>
               <Grid>
-                <Link component={RouterLink} to="/registration" variant="body2">
+                <NavLink to="/registration">
                   {"Don't have an account? Sign Up"}
-                </Link>
+                </NavLink>
               </Grid>
             </Grid>
           </Grid>

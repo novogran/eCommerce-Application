@@ -1,5 +1,5 @@
 import type { Dayjs } from "dayjs";
-import type { Address } from "./Address";
+import type { Address } from "./userAddress";
 
 export type UserRegistration = {
   email?: string;
