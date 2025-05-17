@@ -61,7 +61,7 @@ function LoginForm({
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign in
         </Typography>
-        <form onSubmit={(e) => onSubmit(e)}>
+        <form noValidate onSubmit={(e) => onSubmit(e)}>
           <Grid container spacing={2} direction="column">
             <Grid>
               <TextField
