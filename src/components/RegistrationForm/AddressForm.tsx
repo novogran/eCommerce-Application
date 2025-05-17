@@ -1,8 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { Address } from "../../shared/types/userAddress";
-import type {
-  AddressErrorText,
-} from "../../shared/types/UserRegistration";
+import type { AddressErrorText } from "../../shared/types/UserRegistration";
 import {
   TextField,
   Grid,

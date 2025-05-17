@@ -217,9 +217,7 @@ function RegistrationForm({
             </Grid>
             <Grid container>
               <Grid>
-                <NavLink to="/login">
-                  {"Have an account already? Sign In"}
-                </NavLink>
+                <NavLink to="/login">{"Have an account already? Sign In"}</NavLink>
               </Grid>
             </Grid>
           </Grid>
