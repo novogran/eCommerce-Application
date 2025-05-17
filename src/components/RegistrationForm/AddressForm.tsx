@@ -1,6 +1,5 @@
-import type { Dispatch, SetStateAction } from "react";
-import type { Address } from "../../shared/types/userAddress";
-import type { AddressErrorText } from "../../shared/types/UserRegistration";
+import type { Address } from "../../shared/types/userAddress.types";
+import type { AddressErrorValidation } from "../../shared/types/userRegistration.types";
 import {
   TextField,
   Grid,
@@ -13,22 +12,22 @@ import {
 
 type AddressFormProps = {
   addressTitle: string;
-  address: Address;
-  setAddress: Dispatch<SetStateAction<Address>>;
-  errorText?: AddressErrorText;
+  address?: Address;
+  onAddressChange: (name: string, field: string) => void;
+  isAddressValid?: AddressErrorValidation;
   useDefaultAddress?: boolean;
-  setUseDefaultAddress?: Dispatch<SetStateAction<boolean>>;
-  isDisabled?: boolean;
+  setUseDefaultAddress: (name: string, field: boolean) => void;
+  useOneAddress?: boolean;
 };
 
 function AddressForm({
   addressTitle,
   address,
-  setAddress,
-  errorText,
+  onAddressChange,
+  isAddressValid,
   useDefaultAddress,
   setUseDefaultAddress,
-  isDisabled,
+  useOneAddress: isDisabled,
 }: AddressFormProps): React.ReactElement {
   return (
     <Box>
@@ -39,13 +38,13 @@ function AddressForm({
         sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "start" }}
       >
         <Typography variant="h5" component="h1" align="left" gutterBottom my={0.5}>
-          {addressTitle}
+          {`${addressTitle} address`}
         </Typography>
         <FormControlLabel
           control={
             <Checkbox
               checked={useDefaultAddress}
-              onChange={() => setUseDefaultAddress}
+              onChange={(e) => setUseDefaultAddress(`isDefault${addressTitle}`, e.target.checked)}
               color="primary"
             />
           }
@@ -54,9 +53,9 @@ function AddressForm({
       </Box>
       <Box
         display={"grid"}
-        alignItems={"center"}
+        alignItems={"start"}
         gap={1}
-        sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "center" }}
+        sx={{ gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, alignContent: "start" }}
       >
         <Grid>
           <TextField
@@ -66,12 +65,12 @@ function AddressForm({
             type="text"
             variant="outlined"
             disabled={isDisabled}
-            value={address.country}
-            onChange={() => setAddress}
+            value={address?.country}
+            onChange={(e) => onAddressChange("country", e.target.value)}
           />
-          {!!errorText?.countryErrorText && (
+          {address?.country && !isAddressValid?.isCountryValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {errorText?.countryErrorText}
+              {"Incorrect country"}
             </FormHelperText>
           )}
         </Grid>
@@ -83,12 +82,12 @@ function AddressForm({
             type="text"
             variant="outlined"
             disabled={isDisabled}
-            value={address.city}
-            onChange={() => setAddress}
+            value={address?.city}
+            onChange={(e) => onAddressChange("city", e.target.value)}
           />
-          {!!errorText?.cityErrorText && (
+          {address?.city && !isAddressValid?.isCityValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {errorText?.cityErrorText}
+              {"Incorrect city"}
             </FormHelperText>
           )}
         </Grid>
@@ -108,12 +107,12 @@ function AddressForm({
             type="text"
             variant="outlined"
             disabled={isDisabled}
-            value={address.street}
-            onChange={() => setAddress}
+            value={address?.street}
+            onChange={(e) => onAddressChange("street", e.target.value)}
           />
-          {!!errorText?.streetErrorText && (
+          {address?.street && !isAddressValid?.isStreetValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {errorText?.streetErrorText}
+              {"Incorrect street"}
             </FormHelperText>
           )}
         </Grid>
@@ -125,12 +124,12 @@ function AddressForm({
             type="text"
             variant="outlined"
             disabled={isDisabled}
-            value={address.postalCode}
-            onChange={() => setAddress}
+            value={address?.postalCode}
+            onChange={(e) => onAddressChange("postalCode", e.target.value)}
           />
-          {!!errorText?.postalCodeErrorText && (
+          {address?.postalCode && !isAddressValid?.isPostalCodeValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {errorText?.postalCodeErrorText}
+              {"Incorrect postal code"}
             </FormHelperText>
           )}
         </Grid>

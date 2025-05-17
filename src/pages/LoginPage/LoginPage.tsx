@@ -7,6 +7,7 @@ function LoginPage(): React.ReactElement {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   function onEmailChange(email: string): boolean {
     const isValid: boolean = validateInput({ type: "email", value: email });
@@ -25,8 +26,10 @@ function LoginPage(): React.ReactElement {
   function onSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     if (isEmailValid && isPasswordValid) {
+      setSubmitError("");
       console.log(email + " " + password);
     } else {
+      setSubmitError("Wrong params");
       console.log("Wrong params");
     }
   }
@@ -40,6 +43,7 @@ function LoginPage(): React.ReactElement {
       isPasswordValid={isPasswordValid}
       onPasswordChange={onPasswordChange}
       onSubmit={onSubmit}
+      submitError={submitError}
     />
   );
 }
