@@ -27,7 +27,7 @@ function AddressForm({
   isAddressValid,
   useDefaultAddress,
   setUseDefaultAddress,
-  useOneAddress: isDisabled,
+  useOneAddress,
 }: AddressFormProps): React.ReactElement {
   return (
     <Box>
@@ -64,7 +64,7 @@ function AddressForm({
             name="country"
             type="text"
             variant="outlined"
-            disabled={isDisabled}
+            disabled={useOneAddress}
             value={address?.country}
             onChange={(e) => onAddressChange("country", e.target.value)}
           />
@@ -81,7 +81,7 @@ function AddressForm({
             name="city"
             type="text"
             variant="outlined"
-            disabled={isDisabled}
+            disabled={useOneAddress}
             value={address?.city}
             onChange={(e) => onAddressChange("city", e.target.value)}
           />
@@ -106,7 +106,7 @@ function AddressForm({
             name="street"
             type="text"
             variant="outlined"
-            disabled={isDisabled}
+            disabled={useOneAddress}
             value={address?.street}
             onChange={(e) => onAddressChange("street", e.target.value)}
           />
@@ -123,7 +123,7 @@ function AddressForm({
             name="postalCode"
             type="text"
             variant="outlined"
-            disabled={isDisabled}
+            disabled={useOneAddress}
             value={address?.postalCode}
             onChange={(e) => onAddressChange("postalCode", e.target.value)}
           />

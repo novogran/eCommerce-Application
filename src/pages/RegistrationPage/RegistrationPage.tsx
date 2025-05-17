@@ -4,7 +4,7 @@ import { type Address } from "../../shared/types/userAddress.types";
 import {
   type AddressErrorValidation,
   type UserRegistration,
-  type UserRegistrationValidation,
+  type UserRegistrationErrorValidation,
 } from "../../shared/types/userRegistration.types";
 import { validateInput } from "../../shared/utils/validation";
 
@@ -17,12 +17,14 @@ function RegistrationPage() {
       };
     });
     if (typeof value === "string") {
-      setIsUserPropsValid((prev: UserRegistrationValidation): UserRegistrationValidation => {
-        return {
-          ...prev,
-          [getUserPropValidationName(fieldName)]: getIsPropValid(fieldName, value),
-        };
-      });
+      setIsUserPropsValid(
+        (prev: UserRegistrationErrorValidation): UserRegistrationErrorValidation => {
+          return {
+            ...prev,
+            [getUserPropValidationName(fieldName)]: getIsPropValid(fieldName, value),
+          };
+        }
+      );
     }
   }
 
@@ -37,6 +39,14 @@ function RegistrationPage() {
         shippingAddress: newAddress,
       };
     });
+    setIsUserPropsValid(
+      (prev: UserRegistrationErrorValidation): UserRegistrationErrorValidation => {
+        return {
+          ...prev,
+          [getUserPropValidationName("shippingAddress")]: getIsAddressValid(newAddress),
+        };
+      }
+    );
   }
 
   function onBillingAddressPropChange(fieldName: string, value: string) {
@@ -50,6 +60,14 @@ function RegistrationPage() {
         billingAddress: newAddress,
       };
     });
+    setIsUserPropsValid(
+      (prev: UserRegistrationErrorValidation): UserRegistrationErrorValidation => {
+        return {
+          ...prev,
+          [getUserPropValidationName("billingAddress")]: getIsAddressValid(newAddress),
+        };
+      }
+    );
   }
 
   function getUserPropValidationName(fieldName: string): string {
@@ -64,6 +82,10 @@ function RegistrationPage() {
         return "isLastNameValid";
       case "dob":
         return "isDobValid";
+      case "shippingAddress":
+        return "isShippingAddressValid";
+      case "billingAddress":
+        return "isBillingAddressValid";
     }
     return "";
   }
@@ -82,6 +104,22 @@ function RegistrationPage() {
         return validateInput({ type: "dob", value: value });
     }
     return false;
+  }
+
+  function getIsAddressValid(address: Address | undefined): AddressErrorValidation {
+    if (!address) return initialAddressValidationState;
+    return {
+      isStreetValid: address.street
+        ? validateInput({ type: "street", value: address.street })
+        : false,
+      isCityValid: address.city ? validateInput({ type: "city", value: address?.city }) : false,
+      isPostalCodeValid: address.postalCode
+        ? validateInput({ type: "postalCode", value: { country: "BY", code: address?.postalCode } })
+        : false,
+      isCountryValid: address.country
+        ? validateInput({ type: "country", value: address?.country })
+        : false,
+    };
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>): void {
@@ -124,7 +162,7 @@ function RegistrationPage() {
     isPostalCodeValid: false,
     isCountryValid: false,
   };
-  const initialUserPropValidationState: UserRegistrationValidation = {
+  const initialUserPropValidationState: UserRegistrationErrorValidation = {
     isEmailValid: false,
     isPasswordValid: false,
     isFirstNameValid: false,

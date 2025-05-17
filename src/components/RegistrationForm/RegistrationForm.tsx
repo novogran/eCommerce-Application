@@ -16,7 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import type {
   UserRegistration,
-  UserRegistrationValidation,
+  UserRegistrationErrorValidation,
 } from "../../shared/types/userRegistration.types";
 import "./RegistrationForm.css";
 import dayjs, { Dayjs } from "dayjs";
@@ -25,7 +25,7 @@ import AddressForm from "./AddressForm";
 type RegistrationFormProps = {
   userProps: UserRegistration;
   onPropChange: (name: string, field: string | boolean) => void;
-  isUserPropsValid: UserRegistrationValidation;
+  isUserPropsValid: UserRegistrationErrorValidation;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   submitError: string | null;
   useOneAddress: boolean;

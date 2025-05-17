@@ -12,7 +12,7 @@ export type UserRegistration = {
   isDefaultBilling?: boolean;
 };
 
-export type UserRegistrationValidation = {
+export type UserRegistrationErrorValidation = {
   isEmailValid?: boolean;
   isPasswordValid?: boolean;
   isFirstNameValid?: boolean;
