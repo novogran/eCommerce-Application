@@ -70,7 +70,9 @@ function AddressForm({
             value={address?.country || "BY"}
             onChange={(e) => onAddressChange("country", e.target.value)}
           >
-            <MenuItem value="BY">BY</MenuItem>
+            <MenuItem value="BY" onClick={() => onAddressChange("country", "BY")}>
+              BY
+            </MenuItem>
           </TextField>
           {address?.country && !isAddressValid?.isCountryValid && (
             <FormHelperText error sx={{ mx: 0 }}>

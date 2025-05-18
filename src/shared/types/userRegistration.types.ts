@@ -1,15 +1,15 @@
 import type { Address } from "./userAddress.types";
 
 export type UserRegistration = {
-  email?: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
-  dob?: string | null;
-  shippingAddress?: Address;
-  billingAddress?: Address;
-  isDefaultShipping?: boolean;
-  isDefaultBilling?: boolean;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string | null;
+  shippingAddress: Address;
+  billingAddress: Address;
+  isDefaultShipping: boolean;
+  isDefaultBilling: boolean;
 };
 
 export type UserRegistrationErrorValidation = {

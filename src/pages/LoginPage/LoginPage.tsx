@@ -1,6 +1,9 @@
 import { useState } from "react";
 import LoginForm from "../../components/LoginForm/LoginForm";
 import { validateInput } from "../../shared/utils/validation";
+import { authService } from "../../api/auth-client";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 
 function LoginPage(): React.ReactElement {
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -8,6 +11,8 @@ function LoginPage(): React.ReactElement {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   function onEmailChange(email: string): boolean {
     const isValid: boolean = validateInput({ type: "email", value: email });
@@ -23,10 +28,24 @@ function LoginPage(): React.ReactElement {
     return isValid;
   }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>): void {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
+    setSubmitError("");
     if (isEmailValid && isPasswordValid) {
       setSubmitError("");
+      try {
+        await authService.getCustomerToken(email, password);
+        login();
+        navigate("/main");
+      } catch (error) {
+        let errorMessage = "An error occurred during login. Please try again.";
+        if (error instanceof Error) {
+          if (error.message.includes("Customer account with the given credentials not found")) {
+            errorMessage = "Invalid email or password.";
+          }
+        }
+        setSubmitError(errorMessage);
+      }
     } else {
       setSubmitError("Wrong params");
     }

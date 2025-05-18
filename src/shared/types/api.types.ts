@@ -4,8 +4,10 @@ export interface CustomerDraft {
   key?: string;
   firstName?: string;
   lastName?: string;
-  dateOfBirth?: Date;
+  dateOfBirth?: string;
   addresses?: BaseAddress[];
+  shippingAddresses?: number[];
+  billingAddresses?: number[];
   defaultShippingAddress?: number;
   defaultBillingAddress?: number;
 }
