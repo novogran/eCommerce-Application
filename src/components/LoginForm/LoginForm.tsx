@@ -5,7 +5,6 @@ import {
   Grid,
   Typography,
   Box,
-  Link,
   FormHelperText,
   FormControlLabel,
   Checkbox,
@@ -14,27 +13,30 @@ import { useState } from "react";
 import { NavLink } from "react-router";
 
 export type LoginFormProps = {
-  email?: string;
-  password?: string;
-  emailErrorText?: string | null;
-  passwordErrorText?: string | null;
-  onEmailChange?: () => void;
-  onPasswordChange?: () => void;
-  onSubmit?: () => void;
+  email: string;
+  password: string;
+  isEmailValid: boolean;
+  isPasswordValid: boolean;
+  onEmailChange: (email: string) => void;
+  onPasswordChange: (password: string) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   submitError?: string | null;
 };
 
 function LoginForm({
   email,
   password,
-  emailErrorText,
-  passwordErrorText,
+  isEmailValid,
+  isPasswordValid,
   onEmailChange,
   onPasswordChange,
   onSubmit,
   submitError,
 }: LoginFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
+  const EMAIL_ERROR_TEXT = "Incorrect email, must be: user@example.com";
+  const PASSWORD_ERROR_TEXT =
+    "Incorrect password, must be at least 8 characters long, contains at least one uppercase letter (A-Z), one lowercase letter (a-z), one digit (0-9)";
 
   return (
     <Container
@@ -47,12 +49,19 @@ function LoginForm({
       }}
     >
       <Box
-        sx={{ my: 4, p: 3, boxShadow: 3, borderRadius: 2, minWidth: { xs: "80vw", sm: "480px" } }}
+        sx={{
+          my: 4,
+          p: 3,
+          boxShadow: 3,
+          borderRadius: 2,
+          minWidth: { xs: "80vw", sm: "480px" },
+          width: { xs: "80vw", sm: "800px" },
+        }}
       >
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign in
         </Typography>
-        <form onSubmit={onSubmit}>
+        <form noValidate onSubmit={(e) => onSubmit(e)}>
           <Grid container spacing={2} direction="column">
             <Grid>
               <TextField
@@ -62,11 +71,11 @@ function LoginForm({
                 type="email"
                 variant="outlined"
                 value={email}
-                onChange={onEmailChange}
+                onChange={(e) => onEmailChange(e.target.value)}
               />
-              {!!emailErrorText && (
+              {email && !isEmailValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {emailErrorText}
+                  {EMAIL_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
@@ -78,11 +87,11 @@ function LoginForm({
                 type={showPassword ? "text" : "password"}
                 variant="outlined"
                 value={password}
-                onChange={onPasswordChange}
+                onChange={(e) => onPasswordChange(e.target.value)}
               />
-              {!!passwordErrorText && (
+              {password && !isPasswordValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {passwordErrorText}
+                  {PASSWORD_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
@@ -118,9 +127,7 @@ function LoginForm({
             </Grid>
             <Grid container>
               <Grid>
-                <NavLink to="/registration">
-                  {"Don't have an account? Sign Up"}
-                </NavLink>
+                <NavLink to="/registration">{"Don't have an account? Sign Up"}</NavLink>
               </Grid>
             </Grid>
           </Grid>

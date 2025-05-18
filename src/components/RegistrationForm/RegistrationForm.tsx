@@ -9,38 +9,44 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, type SetStateAction, type Dispatch } from "react";
 import { NavLink } from "react-router";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import type {
   UserRegistration,
-  UserRegistrationErrorText,
-} from "../../shared/types/UserRegistration";
+  UserRegistrationErrorValidation,
+} from "../../shared/types/userRegistration.types";
 import "./RegistrationForm.css";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import AddressForm from "./AddressForm";
+import { ERROR_MESSAGES } from "../../shared/const/formValidationErrorLabels.const";
 
 type RegistrationFormProps = {
-  userProps?: UserRegistration;
-  errorTextProps?: UserRegistrationErrorText;
-  onUserPropsChange?: () => void;
-  onSubmit?: () => void;
-  submitError?: string | null;
+  userProps: UserRegistration;
+  onPropChange: (name: string, field: string | boolean) => void;
+  isUserPropsValid: UserRegistrationErrorValidation;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  submitError: string | null;
+  useOneAddress: boolean;
+  setUseOneAddress: Dispatch<SetStateAction<boolean>>;
+  onShippingAddressPropChange: (name: string, field: string) => void;
+  onBillingAddressPropChange: (name: string, field: string) => void;
 };
 
 function RegistrationForm({
   userProps,
-  errorTextProps,
-  onUserPropsChange,
+  onPropChange,
+  isUserPropsValid,
   onSubmit,
   submitError,
+  useOneAddress,
+  setUseOneAddress,
+  onShippingAddressPropChange,
+  onBillingAddressPropChange,
 }: RegistrationFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
-  const [useOneAddress, setUseOneAddress] = useState(false);
-  const [shippingAddress, setShippingAddress] = useState({});
-  const [billingAddress, setBillingAddress] = useState({});
   const minDate = dayjs().subtract(13, "year");
 
   return (
@@ -59,7 +65,7 @@ function RegistrationForm({
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Sign up
         </Typography>
-        <form onSubmit={onSubmit}>
+        <form noValidate onSubmit={(e) => onSubmit(e)}>
           <Grid container spacing={1} direction="column">
             <Grid>
               <TextField
@@ -69,11 +75,11 @@ function RegistrationForm({
                 type="email"
                 variant="outlined"
                 value={userProps?.email}
-                onChange={onUserPropsChange}
+                onChange={(e) => onPropChange("email", e.target.value)}
               />
-              {!!errorTextProps?.emailErrorText && (
+              {userProps.email && !isUserPropsValid.isEmailValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {errorTextProps?.emailErrorText}
+                  {ERROR_MESSAGES.EMAIL_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
@@ -96,11 +102,11 @@ function RegistrationForm({
                   type="text"
                   variant="outlined"
                   value={userProps?.firstName}
-                  onChange={onUserPropsChange}
+                  onChange={(e) => onPropChange("firstName", e.target.value)}
                 />
-                {!!errorTextProps?.firstNameErrorText && (
+                {userProps.firstName && !isUserPropsValid.isFirstNameValid && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.firstNameErrorText}
+                    {ERROR_MESSAGES.FIRST_NAME_ERROR_TEXT}
                   </FormHelperText>
                 )}
               </Grid>
@@ -113,18 +119,26 @@ function RegistrationForm({
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Date of Birth*"
-                    value={userProps?.dob}
-                    onChange={onUserPropsChange}
+                    value={userProps.dob ? dayjs(userProps.dob) : dayjs("")}
+                    onChange={(value: Dayjs | null) => {
+                      const dateString = value?.format("YYYY-MM-DD") || "";
+                      onPropChange("dob", dateString);
+                    }}
                     sx={{ width: "100%" }}
                     format="DD-MM-YYYY"
                     disableHighlightToday
                     className="date-picker"
                     maxDate={minDate}
+                    slotProps={{
+                      textField: {
+                        error: !!userProps.dob && !isUserPropsValid.isDobValid,
+                      },
+                    }}
                   />
                 </LocalizationProvider>
-                {!!errorTextProps?.dobErrorText && (
+                {userProps.dob && !isUserPropsValid.isDobValid && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.dobErrorText}
+                    {ERROR_MESSAGES.DOB_ERROR_TEXT}
                   </FormHelperText>
                 )}
               </Grid>
@@ -141,11 +155,11 @@ function RegistrationForm({
                   type="text"
                   variant="outlined"
                   value={userProps?.lastName}
-                  onChange={onUserPropsChange}
+                  onChange={(e) => onPropChange(e.target.name, e.target.value)}
                 />
-                {!!errorTextProps?.lastNameErrorText && (
+                {userProps.lastName && !isUserPropsValid.isLastNameValid && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {errorTextProps?.lastNameErrorText}
+                    {ERROR_MESSAGES.LAST_NAME_ERROR_TEXT}
                   </FormHelperText>
                 )}
               </Grid>
@@ -161,15 +175,25 @@ function RegistrationForm({
               label="Use one address for both shipping and billing"
             />
             <AddressForm
-              addressTitle="Shipping address"
-              address={shippingAddress}
-              setAddress={setShippingAddress}
+              addressTitle="Shipping"
+              address={userProps.shippingAddress}
+              onAddressChange={onShippingAddressPropChange}
+              isAddressValid={isUserPropsValid.isShippingAddressValid}
+              useDefaultAddress={userProps.isDefaultShipping}
+              setUseDefaultAddress={onPropChange}
             />
             <AddressForm
-              addressTitle="Billing address"
-              address={billingAddress}
-              setAddress={setBillingAddress}
-              isDisabled={useOneAddress}
+              addressTitle="Billing"
+              address={!useOneAddress ? userProps.billingAddress : userProps.shippingAddress}
+              onAddressChange={onBillingAddressPropChange}
+              isAddressValid={
+                !useOneAddress
+                  ? isUserPropsValid.isBillingAddressValid
+                  : isUserPropsValid.isShippingAddressValid
+              }
+              useDefaultAddress={userProps.isDefaultBilling}
+              setUseDefaultAddress={onPropChange}
+              useOneAddress={useOneAddress}
             />
             <FormControlLabel
               control={
@@ -189,11 +213,11 @@ function RegistrationForm({
                 type={showPassword ? "text" : "password"}
                 variant="outlined"
                 value={userProps?.password}
-                onChange={onUserPropsChange}
+                onChange={(e) => onPropChange(e.target.name, e.target.value)}
               />
-              {!!errorTextProps?.passwordErrorText && (
+              {userProps.password && !isUserPropsValid.isPasswordValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {errorTextProps?.passwordErrorText}
+                  {ERROR_MESSAGES.PASSWORD_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
@@ -217,9 +241,7 @@ function RegistrationForm({
             </Grid>
             <Grid container>
               <Grid>
-                <NavLink to="/login">
-                  {"Have an account already? Sign In"}
-                </NavLink>
+                <NavLink to="/login">{"Have an account already? Sign In"}</NavLink>
               </Grid>
             </Grid>
           </Grid>
