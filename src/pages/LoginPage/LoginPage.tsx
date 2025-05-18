@@ -27,10 +27,8 @@ function LoginPage(): React.ReactElement {
     e.preventDefault();
     if (isEmailValid && isPasswordValid) {
       setSubmitError("");
-      console.log(email + " " + password);
     } else {
       setSubmitError("Wrong params");
-      console.log("Wrong params");
     }
   }
 

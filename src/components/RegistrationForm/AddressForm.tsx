@@ -10,6 +10,7 @@ import {
   Checkbox,
   MenuItem,
 } from "@mui/material";
+import { ERROR_MESSAGES } from "../../shared/const/formValidationErrorLabels.const";
 
 type AddressFormProps = {
   addressTitle: string;
@@ -30,11 +31,6 @@ function AddressForm({
   setUseDefaultAddress,
   useOneAddress,
 }: AddressFormProps): React.ReactElement {
-  const COUNTRY_ERROR_TEXT = "Incorrect country, must be BY";
-  const CITY_ERROR_TEXT =
-    "Incorrect city, must contain at least one character and no special characters or numbers";
-  const STREET_ERROR_TEXT = "Incorrect street, must contain at least one character";
-  const POSTAL_CODE_ERROR_TEXT = "Incorrect postal code, must follow the format for the country";
   return (
     <Box>
       <Box
@@ -78,7 +74,7 @@ function AddressForm({
           </TextField>
           {address?.country && !isAddressValid?.isCountryValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {COUNTRY_ERROR_TEXT}
+              {ERROR_MESSAGES.COUNTRY_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
@@ -95,7 +91,7 @@ function AddressForm({
           />
           {address?.city && !isAddressValid?.isCityValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {CITY_ERROR_TEXT}
+              {ERROR_MESSAGES.CITY_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
@@ -120,7 +116,7 @@ function AddressForm({
           />
           {address?.street && !isAddressValid?.isStreetValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {STREET_ERROR_TEXT}
+              {ERROR_MESSAGES.STREET_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
@@ -137,7 +133,7 @@ function AddressForm({
           />
           {address?.postalCode && !isAddressValid?.isPostalCodeValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {POSTAL_CODE_ERROR_TEXT}
+              {ERROR_MESSAGES.POSTAL_CODE_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>

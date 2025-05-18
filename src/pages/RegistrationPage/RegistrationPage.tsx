@@ -128,10 +128,7 @@ function RegistrationPage() {
       setSubmitError("");
     } else {
       setSubmitError("Wrong params");
-      console.log("Wrong params");
     }
-    console.table(userProps);
-    console.table(isUserPropsValid);
   }
 
   function isFormValid(): boolean | undefined {
