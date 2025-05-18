@@ -8,6 +8,8 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import MainPage from "./pages/MainPage/MainPage";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import NotFound from "./pages/NotFound/NotFound";
+import ProtectedRoute from "./shared/utils/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 const router = createBrowserRouter([
   {
@@ -15,12 +17,24 @@ const router = createBrowserRouter([
     element: <MainPage />,
   },
   {
+    path: "/main",
+    element: <MainPage />,
+  },
+  {
     path: "/login",
-    element: <LoginPage />,
+    element: (
+      <ProtectedRoute>
+        <LoginPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/registration",
-    element: <RegistrationPage />,
+    element: (
+      <ProtectedRoute>
+        <RegistrationPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "*",
@@ -30,9 +44,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider theme={Theme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={Theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </AuthProvider>
   </StrictMode>
 );
