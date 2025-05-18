@@ -136,6 +136,11 @@ function RegistrationForm({
                     disableHighlightToday
                     className="date-picker"
                     maxDate={minDate}
+                    slotProps={{
+                      textField: {
+                        error: !!userProps.dob && !isUserPropsValid.isDobValid,
+                      },
+                    }}
                   />
                 </LocalizationProvider>
                 {userProps.dob && !isUserPropsValid.isDobValid && (
