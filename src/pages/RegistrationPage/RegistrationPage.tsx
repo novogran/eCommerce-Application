@@ -134,8 +134,33 @@ function RegistrationPage() {
     console.table(isUserPropsValid);
   }
 
-  function isFormValid(): boolean {
-    return false;
+  function isFormValid(): boolean | undefined {
+    let isBillingAddressValid: boolean | undefined = false;
+    if (useOneAddress) {
+      isBillingAddressValid =
+        isUserPropsValid.isShippingAddressValid?.isCountryValid &&
+        isUserPropsValid.isShippingAddressValid.isCityValid &&
+        isUserPropsValid.isShippingAddressValid.isPostalCodeValid &&
+        isUserPropsValid.isShippingAddressValid.isStreetValid;
+    } else {
+      isBillingAddressValid =
+        isUserPropsValid.isBillingAddressValid?.isCountryValid &&
+        isUserPropsValid.isBillingAddressValid.isCityValid &&
+        isUserPropsValid.isBillingAddressValid.isPostalCodeValid &&
+        isUserPropsValid.isBillingAddressValid.isStreetValid;
+    }
+    return (
+      isUserPropsValid.isEmailValid &&
+      isUserPropsValid.isPasswordValid &&
+      isUserPropsValid.isLastNameValid &&
+      isUserPropsValid.isLastNameValid &&
+      isUserPropsValid.isDobValid &&
+      isUserPropsValid.isShippingAddressValid?.isCountryValid &&
+      isUserPropsValid.isShippingAddressValid.isCityValid &&
+      isUserPropsValid.isShippingAddressValid.isPostalCodeValid &&
+      isUserPropsValid.isShippingAddressValid.isStreetValid &&
+      isBillingAddressValid
+    );
   }
 
   const initialAddressState: Address = {

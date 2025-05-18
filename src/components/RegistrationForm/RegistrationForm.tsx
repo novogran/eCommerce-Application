@@ -118,7 +118,7 @@ function RegistrationForm({
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Date of Birth*"
-                    value={userProps.dob ? dayjs(userProps.dob) : undefined}
+                    value={userProps.dob ? dayjs(userProps.dob) : dayjs("")}
                     onChange={(value: Dayjs | null) => {
                       const dateString = value?.format("YYYY-MM-DD") || "";
                       onPropChange("dob", dateString);
@@ -180,7 +180,11 @@ function RegistrationForm({
               addressTitle="Billing"
               address={!useOneAddress ? userProps.billingAddress : userProps.shippingAddress}
               onAddressChange={onBillingAddressPropChange}
-              isAddressValid={isUserPropsValid.isBillingAddressValid}
+              isAddressValid={
+                !useOneAddress
+                  ? isUserPropsValid.isBillingAddressValid
+                  : isUserPropsValid.isShippingAddressValid
+              }
               useDefaultAddress={userProps.isDefaultBilling}
               setUseDefaultAddress={onPropChange}
               useOneAddress={useOneAddress}

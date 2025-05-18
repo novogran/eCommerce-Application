@@ -5,7 +5,7 @@ export type UserRegistration = {
   password?: string;
   firstName?: string;
   lastName?: string;
-  dob?: string;
+  dob?: string | null;
   shippingAddress?: Address;
   billingAddress?: Address;
   isDefaultShipping?: boolean;
