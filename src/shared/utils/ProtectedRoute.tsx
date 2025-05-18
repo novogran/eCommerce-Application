@@ -1,15 +1,16 @@
 import { useEffect, type PropsWithChildren } from "react";
 import { useNavigate } from "react-router";
-import { getAuthToken } from "../shared/utils/auth-token";
+import { useAuth } from "../../hooks/useAuth";
+
 function ProtectedRoute({ children }: PropsWithChildren) {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
+    if (isLoggedIn) {
       navigate("/main", { replace: true });
     }
-  }, [navigate]);
+  }, [isLoggedIn, navigate]);
 
   return children;
 }
