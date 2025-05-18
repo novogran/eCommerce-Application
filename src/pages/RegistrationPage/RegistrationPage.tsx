@@ -196,6 +196,7 @@ function RegistrationPage() {
   const [isUserPropsValid, setIsUserPropsValid] = useState(initialUserPropValidationState);
   const [submitError, setSubmitError] = useState("");
   const [useOneAddress, setUseOneAddress] = useState(false);
+
   return (
     <RegistrationForm
       userProps={userProps}

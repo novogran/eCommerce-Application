@@ -42,7 +42,7 @@ function LoginForm({
     <Container
       maxWidth="sm"
       sx={{
-        minHeight: "100vh",
+        minHeight: "calc(100vh - 64px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

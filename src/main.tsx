@@ -10,35 +10,42 @@ import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import NotFound from "./pages/NotFound/NotFound";
 import ProtectedRoute from "./shared/utils/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import DefaultLayout from "./layout/DefaultLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainPage />,
-  },
-  {
-    path: "/main",
-    element: <MainPage />,
-  },
-  {
-    path: "/login",
-    element: (
-      <ProtectedRoute>
-        <LoginPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/registration",
-    element: (
-      <ProtectedRoute>
-        <RegistrationPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "*",
-    element: <NotFound />,
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "/",
+        element: <MainPage />,
+      },
+      {
+        path: "/main",
+        element: <MainPage />,
+      },
+      {
+        path: "/login",
+        element: (
+          <ProtectedRoute>
+            <LoginPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/registration",
+        element: (
+          <ProtectedRoute>
+            <RegistrationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
   },
 ]);
 
