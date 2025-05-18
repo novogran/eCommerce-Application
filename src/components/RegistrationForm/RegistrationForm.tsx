@@ -47,6 +47,14 @@ function RegistrationForm({
 }: RegistrationFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
   const minDate = dayjs().subtract(13, "year");
+  const EMAIL_ERROR_TEXT = "Incorrect email, must be: user@example.com";
+  const PASSWORD_ERROR_TEXT =
+    "Incorrect password, must be at least 8 characters long, contains at least one uppercase letter (A-Z), one lowercase letter (a-z), one digit (0-9)";
+  const FIRST_NAME_ERROR_TEXT =
+    "Incorrect first name, must contain at least one character and no special characters or numbers";
+  const LAST_NAME_ERROR_TEXT =
+    "Incorrect last name, must contain at least one character and no special characters or numbers";
+  const DOB_ERROR_TEXT = "Incorrect date, you must be at least 13 years old";
 
   return (
     <Container
@@ -78,7 +86,7 @@ function RegistrationForm({
               />
               {userProps.email && !isUserPropsValid.isEmailValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {"Incorrect email"}
+                  {EMAIL_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
@@ -105,7 +113,7 @@ function RegistrationForm({
                 />
                 {userProps.firstName && !isUserPropsValid.isFirstNameValid && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {"Incorrect first name"}
+                    {FIRST_NAME_ERROR_TEXT}
                   </FormHelperText>
                 )}
               </Grid>
@@ -132,7 +140,7 @@ function RegistrationForm({
                 </LocalizationProvider>
                 {userProps.dob && !isUserPropsValid.isDobValid && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {"Incorrect date of birth"}
+                    {DOB_ERROR_TEXT}
                   </FormHelperText>
                 )}
               </Grid>
@@ -153,7 +161,7 @@ function RegistrationForm({
                 />
                 {userProps.lastName && !isUserPropsValid.isLastNameValid && (
                   <FormHelperText error sx={{ mx: 0 }}>
-                    {"Incorrect last name"}
+                    {LAST_NAME_ERROR_TEXT}
                   </FormHelperText>
                 )}
               </Grid>
@@ -211,7 +219,7 @@ function RegistrationForm({
               />
               {userProps.password && !isUserPropsValid.isPasswordValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {"Incorrect password"}
+                  {PASSWORD_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>

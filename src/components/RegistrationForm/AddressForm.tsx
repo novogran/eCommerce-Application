@@ -8,6 +8,7 @@ import {
   FormHelperText,
   FormControlLabel,
   Checkbox,
+  MenuItem,
 } from "@mui/material";
 
 type AddressFormProps = {
@@ -29,6 +30,11 @@ function AddressForm({
   setUseDefaultAddress,
   useOneAddress,
 }: AddressFormProps): React.ReactElement {
+  const COUNTRY_ERROR_TEXT = "Incorrect country, must be BY";
+  const CITY_ERROR_TEXT =
+    "Incorrect city, must contain at least one character and no special characters or numbers";
+  const STREET_ERROR_TEXT = "Incorrect street, must contain at least one character";
+  const POSTAL_CODE_ERROR_TEXT = "Incorrect postal code, must follow the format for the country";
   return (
     <Box>
       <Box
@@ -62,15 +68,17 @@ function AddressForm({
             fullWidth
             label="Country*"
             name="country"
-            type="text"
+            select
             variant="outlined"
             disabled={useOneAddress}
-            value={address?.country}
+            value={address?.country || "BY"}
             onChange={(e) => onAddressChange("country", e.target.value)}
-          />
+          >
+            <MenuItem value="BY">BY</MenuItem>
+          </TextField>
           {address?.country && !isAddressValid?.isCountryValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {"Incorrect country"}
+              {COUNTRY_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
@@ -87,7 +95,7 @@ function AddressForm({
           />
           {address?.city && !isAddressValid?.isCityValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {"Incorrect city"}
+              {CITY_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
@@ -112,7 +120,7 @@ function AddressForm({
           />
           {address?.street && !isAddressValid?.isStreetValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {"Incorrect street"}
+              {STREET_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
@@ -129,7 +137,7 @@ function AddressForm({
           />
           {address?.postalCode && !isAddressValid?.isPostalCodeValid && (
             <FormHelperText error sx={{ mx: 0 }}>
-              {"Incorrect postal code"}
+              {POSTAL_CODE_ERROR_TEXT}
             </FormHelperText>
           )}
         </Grid>
