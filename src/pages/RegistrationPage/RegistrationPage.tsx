@@ -7,8 +7,14 @@ import {
   type UserRegistrationErrorValidation,
 } from "../../shared/types/userRegistration.types";
 import { validateInput } from "../../shared/utils/validation";
+import { authService, customerService } from "../../api/auth-client";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 
 function RegistrationPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   function onPropChange(fieldName: string, value: string | boolean) {
     setUserProps((prev: UserRegistration): UserRegistration => {
       return {
@@ -122,10 +128,62 @@ function RegistrationPage() {
     };
   }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>): void {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     if (isFormValid()) {
       setSubmitError("");
+      try {
+        if (userProps.dob) {
+          await customerService.signUp({
+            email: userProps.email,
+            firstName: userProps.firstName,
+            lastName: userProps.lastName,
+            dateOfBirth: userProps.dob,
+            password: userProps.password,
+            addresses: [
+              {
+                postalCode: userProps.shippingAddress.postalCode,
+                city: userProps.shippingAddress.city,
+                streetName: userProps.shippingAddress.street,
+                country: userProps.shippingAddress.country,
+              },
+              {
+                postalCode: useOneAddress
+                  ? userProps.shippingAddress.postalCode
+                  : userProps.billingAddress.postalCode,
+                city: useOneAddress
+                  ? userProps.shippingAddress.city
+                  : userProps.billingAddress.city,
+                streetName: useOneAddress
+                  ? userProps.shippingAddress.street
+                  : userProps.billingAddress.street,
+                country: useOneAddress
+                  ? userProps.shippingAddress.country
+                  : userProps.billingAddress.country,
+              },
+            ],
+            shippingAddresses: [0],
+            billingAddresses: [1],
+            defaultShippingAddress: userProps.isDefaultShipping ? 0 : undefined,
+            defaultBillingAddress: userProps.isDefaultBilling ? 1 : undefined,
+          });
+          await authService.getCustomerToken(userProps.email, userProps.password);
+        }
+
+        login();
+        navigate("/main");
+      } catch (error) {
+        console.log(error);
+        let errorMessage = "An error occurred during login. Please try again.";
+        if (error instanceof Error) {
+          if (
+            error.message.includes("There is already an existing customer with the provided email.")
+          ) {
+            errorMessage = error.message;
+          }
+        }
+        setSubmitError(errorMessage);
+      }
     } else {
       setSubmitError("Wrong params");
     }
@@ -161,7 +219,7 @@ function RegistrationPage() {
   }
 
   const initialAddressState: Address = {
-    country: "",
+    country: "BY",
     city: "",
     street: "",
     postalCode: "",
@@ -182,7 +240,7 @@ function RegistrationPage() {
     isStreetValid: false,
     isCityValid: false,
     isPostalCodeValid: false,
-    isCountryValid: false,
+    isCountryValid: true,
   };
   const initialUserPropValidationState: UserRegistrationErrorValidation = {
     isEmailValid: false,

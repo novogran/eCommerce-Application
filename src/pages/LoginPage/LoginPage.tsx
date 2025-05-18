@@ -33,23 +33,21 @@ function LoginPage(): React.ReactElement {
     setSubmitError("");
     if (isEmailValid && isPasswordValid) {
       setSubmitError("");
+      try {
+        await authService.getCustomerToken(email, password);
+        login();
+        navigate("/main");
+      } catch (error) {
+        let errorMessage = "An error occurred during login. Please try again.";
+        if (error instanceof Error) {
+          if (error.message.includes("Customer account with the given credentials not found")) {
+            errorMessage = "Invalid email or password.";
+          }
+        }
+        setSubmitError(errorMessage);
+      }
     } else {
       setSubmitError("Wrong params");
-    }
-
-    try {
-      await authService.getCustomerToken(email, password);
-      login();
-      navigate("/main");
-    } catch (error) {
-      console.log(error);
-      let errorMessage = "An error occurred during login. Please try again.";
-      if (error instanceof Error) {
-        if (error.message.includes("Customer account with the given credentials not found")) {
-          errorMessage = "Invalid email or password. Please check your credentials.";
-        }
-      }
-      setSubmitError(errorMessage);
     }
   }
 

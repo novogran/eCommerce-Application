@@ -47,7 +47,7 @@ function RegistrationForm({
   onBillingAddressPropChange,
 }: RegistrationFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
-  const minDate = dayjs().subtract(13, "year");
+  const minDate = dayjs().subtract(13, "year").subtract(1, "day");
 
   return (
     <Container
