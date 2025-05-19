@@ -14,6 +14,6 @@ describe("NotFoundPage", () => {
     expect(screen.getByRole("heading", { name: /page not found/i, level: 1 })).toBeInTheDocument();
     const image = screen.getByRole("img", { name: /404 error/i });
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", "../../../public/404.jpg");
+    expect(image).toHaveAttribute("src", "/404.jpg");
   });
 });

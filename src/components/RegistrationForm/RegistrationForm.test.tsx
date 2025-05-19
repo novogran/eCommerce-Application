@@ -8,7 +8,55 @@ describe("RegistrationForm", () => {
   it("renders registration form correctly", () => {
     render(
       <Router>
-        <RegistrationForm />
+        <RegistrationForm
+          userProps={{
+            email: "",
+            password: "",
+            firstName: "",
+            lastName: "",
+            dob: "",
+            shippingAddress: {
+              street: "",
+              city: "",
+              postalCode: "",
+              country: "",
+            },
+            billingAddress: {
+              street: "",
+              city: "",
+              postalCode: "",
+              country: "",
+            },
+            isDefaultShipping: false,
+            isDefaultBilling: false,
+          }}
+          onPropChange={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          isUserPropsValid={{
+            isEmailValid: undefined,
+            isPasswordValid: undefined,
+            isFirstNameValid: undefined,
+            isLastNameValid: undefined,
+            isDobValid: undefined,
+            isShippingAddressValid: undefined,
+            isBillingAddressValid: undefined,
+          }}
+          onSubmit={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          submitError={""}
+          useOneAddress={false}
+          setUseOneAddress={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onShippingAddressPropChange={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onBillingAddressPropChange={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </Router>
     );
     expect(screen.getByRole("heading", { name: "Sign up" })).toBeInTheDocument();

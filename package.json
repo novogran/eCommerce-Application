@@ -11,7 +11,8 @@
     "prepare": "husky",
     "pre-commit": "lint-staged",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "preview": "vite preview"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [

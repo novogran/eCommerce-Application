@@ -8,7 +8,21 @@ describe("LoginForm", () => {
   it("renders login form correctly", () => {
     render(
       <Router>
-        <LoginForm />
+        <LoginForm
+          email={""}
+          password={""}
+          isEmailValid={false}
+          isPasswordValid={false}
+          onEmailChange={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onPasswordChange={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onSubmit={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </Router>
     );
 

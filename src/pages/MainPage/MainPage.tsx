@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 function MainPage() {
   return (
-    <Grid display={"flex"} gap={1}>
+    <Grid display={"flex"} justifyContent={"center"} gap={1}>
       MainPage
       <NavLink to="/login">Login Page</NavLink>
       <NavLink to="/registration">Registration Page</NavLink>

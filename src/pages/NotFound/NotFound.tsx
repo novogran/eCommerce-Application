@@ -9,11 +9,12 @@ function NotFound(): React.ReactElement {
       display={"flex"}
       sx={{ flexDirection: { xs: "column", lg: "row" }, my: 3 }}
       alignItems={"center"}
+      justifyContent={"center"}
       gap={"3rem"}
     >
       <Box
         component="img"
-        src="../../../public/404.jpg"
+        src="/404.jpg"
         alt="404 error"
         sx={{
           width: { xs: "90%", sm: "100%" },
