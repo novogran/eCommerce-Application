@@ -1,10 +1,11 @@
 import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import { removeAuthToken } from "../shared/utils/auth-token";
 
 function Header() {
   const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <AppBar
@@ -27,6 +28,7 @@ function Header() {
                 onClick={() => {
                   logout();
                   removeAuthToken();
+                  navigate("/main");
                 }}
               >
                 Logout
