@@ -2,6 +2,7 @@ import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
 import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import { removeAuthToken } from "../shared/utils/auth-token";
+import { Person } from "@mui/icons-material";
 
 function Header() {
   const { isLoggedIn, logout } = useAuth();
@@ -23,16 +24,25 @@ function Header() {
           </NavLink>
           <Box display="flex" gap={2}>
             {isLoggedIn ? (
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  logout();
-                  removeAuthToken();
-                  navigate("/main");
-                }}
-              >
-                Logout
-              </Button>
+              <>
+                <NavLink to="/user">
+                  {({ isActive }) => (
+                    <Button variant={isActive ? "contained" : "outlined"}>
+                      <Person />
+                    </Button>
+                  )}
+                </NavLink>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    logout();
+                    removeAuthToken();
+                    navigate("/main");
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
             ) : (
               <>
                 <NavLink to="/registration">
