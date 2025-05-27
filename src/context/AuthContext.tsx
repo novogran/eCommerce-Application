@@ -3,7 +3,8 @@ import { getAuthToken } from "../shared/utils/auth-token";
 import { AuthContext } from "./auth-context";
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const login = () => {
     setIsLoggedIn(true);
@@ -17,10 +18,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const token = getAuthToken();
     if (token) {
       setIsLoggedIn(true);
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, isLoading }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
