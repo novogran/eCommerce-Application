@@ -23,6 +23,11 @@ function Header() {
             </Button>
           </NavLink>
           <Box display="flex" gap={2}>
+            <NavLink to="/catalog">
+              {({ isActive }) => (
+                <Button variant={isActive ? "contained" : "outlined"}>Catalog</Button>
+              )}
+            </NavLink>
             {isLoggedIn ? (
               <>
                 <NavLink to="/user">
