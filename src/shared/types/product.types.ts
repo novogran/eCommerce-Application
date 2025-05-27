@@ -7,7 +7,7 @@ export type Product = {
     "en-US": string;
   };
   masterVariant: ProductVariant;
-  otherVariants?: ProductVariant[];
+  variants?: ProductVariant[];
 };
 
 export type ProductVariant = {
@@ -23,10 +23,15 @@ export type ProductVariant = {
 export type Price = {
   id: string;
   key: string;
-  value: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
+  value: PriceValue;
+  discounted?: {
+    value: PriceValue;
   };
+};
+
+type PriceValue = {
+  type: string;
+  currencyCode: string;
+  centAmount: number;
+  fractionDigits: number;
 };
