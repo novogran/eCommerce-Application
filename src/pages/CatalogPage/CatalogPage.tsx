@@ -6,9 +6,9 @@ import type { Product, ProductResponse, ProductType } from "../../shared/types/p
 function CatalogPage() {
   const [categories, setCategories] = useState<ProductType[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  //usestate params
-  const currentPage: number = 1;
-  const PRODUCT_PER_PAGE = 4;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const PRODUCT_PER_PAGE = 3;
 
   useEffect(() => {
     async function fetchCategories(): Promise<void> {
@@ -23,23 +23,37 @@ function CatalogPage() {
   }, []);
 
   useEffect(() => {
-    async function fetchProducts(page: number): Promise<void> {
-      try {
-        const params = {
-          limit: PRODUCT_PER_PAGE,
-          offset: PRODUCT_PER_PAGE * (page - 1),
-        };
-        const products: ProductResponse = await productService.getProducts(params);
-        setProducts(products.results);
-        totalProducts = products.total;
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      }
-    }
     fetchProducts(currentPage);
   }, []);
 
-  return <Catalog categories={categories} products={products} />;
+  async function fetchProducts(page: number): Promise<void> {
+    try {
+      const params = {
+        limit: PRODUCT_PER_PAGE,
+        offset: PRODUCT_PER_PAGE * (page - 1),
+      };
+      const products: ProductResponse = await productService.getProducts(params);
+      setProducts(products.results);
+      setTotalPages(Math.ceil(products.total / PRODUCT_PER_PAGE));
+    } catch (error) {
+      console.error("Failed to fetch products", error);
+    }
+  }
+
+  function setPage(page: number): void {
+    setCurrentPage(page);
+    fetchProducts(page);
+  }
+
+  return (
+    <Catalog
+      categories={categories}
+      products={products}
+      maxPages={totalPages}
+      currentPage={currentPage}
+      setCurrentPage={setPage}
+    />
+  );
 }
 
 export default CatalogPage;
