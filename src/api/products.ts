@@ -2,15 +2,15 @@ import type { AxiosResponse } from "axios";
 import { authService } from "./auth-client";
 import axios from "axios";
 import { handleRequestError, API_URL } from "../shared/utils/axios-config";
-import type { Product } from "../shared/types/product.types";
+import type { Product, ProductResponse, ProductType } from "../shared/types/product.types";
 import { getAuthToken } from "../shared/utils/auth-token";
 
 export const productService = {
-  async getProducts(params?: URLSearchParams): Promise<Product[]> {
+  async getProductsTypes(params?: URLSearchParams): Promise<ProductType[]> {
     try {
       const access_token = getAuthToken() ?? (await authService.getAnonymousToken());
-      const response: AxiosResponse<{ results: Product[] }> = await axios.get(
-        `${API_URL}/product-projections`,
+      const response: AxiosResponse<{ results: ProductType[] }> = await axios.get(
+        `${API_URL}/product-types`,
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
@@ -22,6 +22,26 @@ export const productService = {
       );
 
       return response.data.results;
+    } catch (error) {
+      return handleRequestError(error);
+    }
+  },
+
+  async getProducts(params?: { limit: number; offset: number }): Promise<ProductResponse> {
+    try {
+      const access_token = getAuthToken() ?? (await authService.getAnonymousToken());
+      const response: AxiosResponse<ProductResponse> = await axios.get(
+        `${API_URL}/product-projections`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          params: {
+            ...params,
+          },
+        }
+      );
+      return response.data;
     } catch (error) {
       return handleRequestError(error);
     }
@@ -58,7 +78,6 @@ export const productService = {
           },
         }
       );
-
       return response.data;
     } catch (error) {
       return handleRequestError(error);

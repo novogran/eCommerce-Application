@@ -8,6 +8,7 @@ export const CONFIG = {
   scopes: {
     anonymous: [
       "create_anonymous_token",
+      "view_products",
       "view_published_products",
       "view_categories",
       "manage_my_profile",
@@ -20,6 +21,7 @@ export const CONFIG = {
       "manage_my_orders",
       "manage_my_quotes",
       "manage_my_shopping_lists",
+      "view_products",
     ],
   },
 };
