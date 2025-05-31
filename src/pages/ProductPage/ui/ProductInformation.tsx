@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import type { Product } from "../../../shared/types/product.types";
+import ProductSlider from "./ProductSlider";
 
 function ProductInformation({ data }: { data: Product }) {
   return (
@@ -11,23 +12,7 @@ function ProductInformation({ data }: { data: Product }) {
           flexDirection: { xs: "column", md: "row" },
         }}
       >
-        {data.masterVariant.images?.map((image) => {
-          return (
-            <div
-              style={{
-                width: "345px",
-                height: "345px",
-                backgroundImage: `url(${image.url})`,
-                backgroundSize: "contain",
-                backgroundColor: "white",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                borderRadius: "20px",
-              }}
-              key={image.url}
-            ></div>
-          );
-        })}
+        {data.masterVariant.images && <ProductSlider images={data.masterVariant.images} />}
         <Box>
           <Typography variant="h4" fontWeight={600}>
             {data.name["en-US"]}
