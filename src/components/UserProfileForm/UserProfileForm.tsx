@@ -30,7 +30,6 @@ import type { UserProfileErrorValidation } from "../../shared/types/userProfile.
 
 type UserProfileFormProps = {
   editMode: boolean;
-  user: Customer;
   isUserPropsValid: UserProfileErrorValidation;
   isUserPasswordsValid: {
     current: boolean;

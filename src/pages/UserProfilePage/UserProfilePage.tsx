@@ -341,7 +341,6 @@ export default function UserProfilePage() {
         editMode={editMode}
         isUserPropsValid={isUserPropsValid}
         isUserPasswordsValid={isUserPasswordsValid}
-        user={user}
         tempUser={tempUser}
         passwords={passwords}
         showPassword={showPassword}
