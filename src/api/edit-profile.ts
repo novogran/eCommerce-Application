@@ -2,8 +2,8 @@ import type { AxiosResponse } from "axios";
 import type { Customer } from "../shared/types/api.types";
 import { getAuthToken } from "../shared/utils/auth-token";
 import axios from "axios";
-import { API_URL, handleRequestError } from "./auth-client";
 import type { Address } from "../shared/types/userAddress.types";
+import { API_URL, handleRequestError } from "../shared/utils/axios-config";
 
 export const editProfileService = {
   async submitChangedUserData(tempUser: Customer, user: Customer): Promise<Customer> {

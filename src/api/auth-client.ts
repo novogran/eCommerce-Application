@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api.types";
-import { setAuthToken } from "../shared/utils/auth-token";
+import { getAuthToken, setAuthToken } from "../shared/utils/auth-token";
 import { handleRequestError, CONFIG, API_URL } from "../shared/utils/axios-config";
 
 const AUTH_URL = `https://auth.${CONFIG.region}.gcp.commercetools.com/oauth`;
