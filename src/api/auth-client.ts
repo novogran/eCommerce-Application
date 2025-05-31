@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api.types";
-import { setAuthToken } from "../shared/utils/auth-token";
+import { getAuthToken, setAuthToken } from "../shared/utils/auth-token";
 
 const CONFIG = {
   clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
@@ -27,9 +27,9 @@ const CONFIG = {
 };
 
 const AUTH_URL = `https://auth.${CONFIG.region}.gcp.commercetools.com/oauth`;
-const API_URL = `https://api.${CONFIG.region}.gcp.commercetools.com/${CONFIG.projectKey}`;
+export const API_URL = `https://api.${CONFIG.region}.gcp.commercetools.com/${CONFIG.projectKey}`;
 
-const handleRequestError = (error: unknown): never => {
+export const handleRequestError = (error: unknown): never => {
   if (axios.isAxiosError(error)) {
     const errorData = error.response?.data as { message?: string; error_description?: string };
     throw new Error(errorData?.message || errorData?.error_description || error.message);
@@ -119,20 +119,15 @@ export const customerService = {
     }
   },
 
-  async login(email: string, password: string): Promise<Customer> {
+  async getCustomer(): Promise<Customer> {
     try {
-      const { access_token } = await authService.getCustomerToken(email, password);
+      const access_token = getAuthToken() || (await authService.getAnonymousToken());
 
-      const response: AxiosResponse<Customer> = await axios.post(
-        `${API_URL}/me/login`,
-        { email, password },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response: AxiosResponse<Customer> = await axios.get(`${API_URL}/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
 
       return response.data;
     } catch (error) {

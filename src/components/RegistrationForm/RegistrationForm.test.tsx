@@ -16,13 +16,13 @@ describe("RegistrationForm", () => {
             lastName: "",
             dob: "",
             shippingAddress: {
-              street: "",
+              streetName: "",
               city: "",
               postalCode: "",
               country: "",
             },
             billingAddress: {
-              street: "",
+              streetName: "",
               city: "",
               postalCode: "",
               country: "",
