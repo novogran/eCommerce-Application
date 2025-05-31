@@ -183,7 +183,7 @@ export default function UserProfileForm({
                 label="Date of Birth*"
                 className="date-picker"
                 name="dateOfBirth"
-                value={tempUser.dateOfBirth ? dayjs(tempUser.dateOfBirth) : undefined}
+                value={tempUser.dateOfBirth ? dayjs(tempUser.dateOfBirth) : dayjs("")}
                 onChange={(value: Dayjs | null) => {
                   const dateString = value?.format("YYYY-MM-DD") || "";
                   onPersonalInfoChange("dateOfBirth", dateString);
