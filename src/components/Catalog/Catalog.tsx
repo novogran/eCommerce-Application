@@ -1,7 +1,7 @@
 import { Container, Grid, Typography, Box, Button, TextField, MenuItem } from "@mui/material";
-import { NavLink } from "react-router";
 import type { Product, ProductType } from "../../shared/types/product.types";
 import type { Dispatch, SetStateAction } from "react";
+import ProductCard from "./ProductCard";
 
 export type CatalogProps = {
   categories: ProductType[];
@@ -13,14 +13,16 @@ export type CatalogProps = {
   handleCategorySelection: (id: string) => void;
   filterQuery: string;
   setFilterQuery: Dispatch<SetStateAction<string>>;
-  priceMin: number;
-  setPriceMin: Dispatch<SetStateAction<number>>;
-  priceMax: number;
-  setPriceMax: Dispatch<SetStateAction<number>>;
+  priceMin: string;
+  setPriceMin: Dispatch<SetStateAction<string>>;
+  priceMax: string;
+  setPriceMax: Dispatch<SetStateAction<string>>;
   sortParam: "name" | "price" | "";
   setSortParam: Dispatch<SetStateAction<"name" | "price" | "">>;
   sortDir: "asc" | "desc";
   setSortDir: Dispatch<SetStateAction<"asc" | "desc">>;
+  fetchProducts: () => Promise<void>;
+  usedFilters: string;
 };
 
 function Catalog({
@@ -41,7 +43,30 @@ function Catalog({
   setSortParam,
   sortDir,
   setSortDir,
+  fetchProducts,
+  usedFilters,
 }: CatalogProps): React.ReactElement {
+  function handleApply(): void {
+    if (!getIsPriceFilterCorrect()) return;
+    fetchProducts();
+  }
+
+  function resetFilters(): void {
+    if (!getIsPriceFilterCorrect()) return;
+
+    setFilterQuery("");
+    setPriceMin("");
+    setPriceMax("");
+    setSortParam("");
+    setSortDir("asc");
+    handleCategorySelection("");
+  }
+
+  function getIsPriceFilterCorrect(): boolean {
+    if (!priceMax || !priceMin) return true;
+    return parseInt(priceMax) > parseInt(priceMin);
+  }
+
   return (
     <Container
       maxWidth="md"
@@ -93,6 +118,7 @@ function Catalog({
         >
           <TextField
             placeholder="Search..."
+            autoComplete="off"
             name="search-field"
             type="text"
             value={filterQuery}
@@ -106,16 +132,25 @@ function Catalog({
               <Box display={"flex"} gap={1} alignItems={"center"}>
                 <TextField
                   placeholder="from"
+                  type="number"
+                  autoComplete="off"
                   value={priceMin}
-                  onChange={(e) => setPriceMin(Number.parseInt(e.target.value))}
+                  onChange={(e) => setPriceMin(e.target.value)}
                 />
                 <Typography>-</Typography>
                 <TextField
                   placeholder="to"
+                  type="number"
+                  autoComplete="off"
                   value={priceMax}
-                  onChange={(e) => setPriceMax(Number.parseInt(e.target.value))}
+                  onChange={(e) => setPriceMax(e.target.value)}
                 />
               </Box>
+              {!getIsPriceFilterCorrect() && (
+                <Typography color="error" sx={{ mx: 0 }}>
+                  {"Max price must be not less than min"}
+                </Typography>
+              )}
             </Box>
           </Box>
           <Box mt={2} width={"100%"}>
@@ -148,9 +183,24 @@ function Catalog({
               </TextField>
             </Box>
           </Box>
-          <Button variant="contained" color="primary" sx={{ margin: "1rem" }}>
-            Apply filters
-          </Button>
+          <Box display={"flex"} flexWrap={"wrap"} justifyContent={"center"}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ margin: "1rem" }}
+              onClick={() => handleApply()}
+            >
+              Apply filters
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ margin: "1rem" }}
+              onClick={() => resetFilters()}
+            >
+              Reset filters
+            </Button>
+          </Box>
         </Box>
         <Box
           boxShadow={3}
@@ -159,12 +209,23 @@ function Catalog({
             gridRow: { xs: "3 / 4", md: "2 / 3" },
           }}
         >
-          <Typography component="p" textAlign={"right"} mx={2}>
-            Page {currentPage} of {maxPages}
-          </Typography>
-          {products.map((product, index) => {
-            return <ProductCard key={index} product={product}></ProductCard>;
-          })}
+          <Box display={"flex"} justifyContent={"space-between"} alignItems={"baseline"} mt={1}>
+            <Typography component="p" textAlign={"left"} ml={2}>
+              {usedFilters}
+            </Typography>
+            <Typography component="p" textAlign={"right"} mr={2} minWidth={"7rem"}>
+              Page {currentPage} of {maxPages}
+            </Typography>
+          </Box>
+          {products.length > 0 ? (
+            products.map((product, index) => {
+              return <ProductCard key={index} product={product}></ProductCard>;
+            })
+          ) : (
+            <Typography variant="h3" textAlign={"center"} my={3}>
+              No products found
+            </Typography>
+          )}
         </Box>
         <Box
           maxWidth={"sm"}
@@ -192,122 +253,13 @@ function Catalog({
             variant="outlined"
             color="primary"
             onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === maxPages}
+            disabled={currentPage === maxPages || maxPages === 0}
           >
             {">"}
           </Button>
         </Box>
       </Grid>
     </Container>
-  );
-}
-
-export type ProductCardProps = {
-  product: Product;
-};
-
-function ProductCard({ product }: ProductCardProps): React.ReactElement {
-  return (
-    <NavLink to={"/product/" + product.key} style={{ textDecoration: "none", color: "inherit" }}>
-      <Box
-        boxShadow={3}
-        m={1}
-        display={"grid"}
-        sx={{
-          transition: "all 0.2s",
-          gridTemplateColumns: { xs: "160px 1fr", md: "200px 1fr" },
-          "&:hover": {
-            boxShadow: 6,
-            bgcolor: "action.hover",
-          },
-        }}
-      >
-        <Box
-          m={1}
-          sx={{
-            width: { xs: "150px", md: "180px" },
-            height: { xs: "150px", md: "180px" },
-            borderRadius: 2,
-            boxShadow: 3,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            overflow: "hidden",
-          }}
-        >
-          {product.masterVariant &&
-            Array.isArray(product.masterVariant.images) &&
-            product.masterVariant.images[0] && (
-              <Box
-                component="img"
-                src={product.masterVariant.images[0].url}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  borderRadius: 2,
-                }}
-              />
-            )}
-        </Box>
-        <Box>
-          <Typography
-            sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "2rem" } }}
-            component="h1"
-            px={1}
-            py={0.5}
-          >
-            {product.name["en-US"]}
-          </Typography>
-          <Box display={"flex"}>
-            {product.masterVariant?.prices[0].discounted ? (
-              <Box display={"flex"}>
-                <Typography
-                  variant="h5"
-                  sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" } }}
-                  component="h1"
-                  px={1}
-                  py={0.5}
-                  alignSelf={"center"}
-                >
-                  {product.masterVariant?.prices[0].discounted.value.centAmount / 100}
-                </Typography>
-                <Typography
-                  component="p"
-                  px={0.5}
-                  sx={{
-                    textDecoration: "line-through",
-                    fontSize: { xs: "0.75rem", sm: "1rem", md: "1.25rem" },
-                  }}
-                >
-                  {product.masterVariant?.prices[0].value.centAmount / 100}
-                </Typography>
-              </Box>
-            ) : (
-              <Typography
-                variant="h5"
-                sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" } }}
-                component="h1"
-                px={1}
-                py={0.5}
-              >
-                {product.masterVariant?.prices[0].value.centAmount / 100}
-              </Typography>
-            )}
-            <Typography
-              variant="h6"
-              sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" } }}
-              alignSelf={"center"}
-            >
-              {product.masterVariant?.prices[0].value.currencyCode}
-            </Typography>
-          </Box>
-          <Typography component="p" px={2} sx={{ fontSize: { xs: "0.75rem", sm: "1rem" } }} mt={1}>
-            {product.description ? product.description["en-US"] : "No description."}
-          </Typography>
-        </Box>
-      </Box>
-    </NavLink>
   );
 }
 

@@ -20,25 +20,31 @@ export const productService = {
           },
         }
       );
-
       return response.data.results;
     } catch (error) {
       return handleRequestError(error);
     }
   },
 
-  async getProducts(params?: { limit: number; offset: number }): Promise<ProductResponse> {
+  async getProducts(
+    params?: { limit: number; offset: number },
+    sort?: string
+  ): Promise<ProductResponse> {
     try {
       const access_token = getAuthToken() ?? (await authService.getAnonymousToken()).access_token;
+      const requestParams: Record<string, string | boolean | number> = {
+        ...params,
+      };
+      if (sort) {
+        requestParams.sort = sort;
+      }
       const response: AxiosResponse<ProductResponse> = await axios.get(
         `${API_URL}/product-projections`,
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
-          params: {
-            ...params,
-          },
+          params: requestParams,
         }
       );
       return response.data;
@@ -49,20 +55,27 @@ export const productService = {
 
   async getFilteredProducts(
     params?: { limit: number; offset: number },
-    filter?: string
+    filter?: string,
+    sort?: string
   ): Promise<ProductResponse> {
     try {
       const access_token = getAuthToken() ?? (await authService.getAnonymousToken()).access_token;
+      const requestParams: Record<string, string | boolean | number> = {
+        ...params,
+      };
+      if (filter) {
+        requestParams.where = filter;
+      }
+      if (sort) {
+        requestParams.sort = sort;
+      }
       const response: AxiosResponse<ProductResponse> = await axios.get(
         `${API_URL}/product-projections`,
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
-          params: {
-            where: filter,
-            ...params,
-          },
+          params: requestParams,
         }
       );
       return response.data;
