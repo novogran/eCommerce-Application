@@ -1,3 +1,5 @@
+import type { Address } from "./userAddress.types";
+
 export interface CustomerDraft {
   email: string;
   password: string;
@@ -5,18 +7,11 @@ export interface CustomerDraft {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
-  addresses?: BaseAddress[];
+  addresses?: Address[];
   shippingAddresses?: number[];
   billingAddresses?: number[];
   defaultShippingAddress?: number;
   defaultBillingAddress?: number;
-}
-
-interface BaseAddress {
-  postalCode?: string;
-  streetName?: string;
-  city?: string;
-  country: string;
 }
 
 export interface Customer {
@@ -25,13 +20,13 @@ export interface Customer {
   password?: string;
   firstName?: string;
   lastName?: string;
-  isEmailVerified: boolean;
-  dateOfBirth?: Date;
+  isEmailVerified?: boolean;
+  dateOfBirth?: string;
   version: number;
-  createdAt: string;
-  lastModifiedAt: string;
-  authenticationMode: "Password";
-  addresses: BaseAddress[];
+  createdAt?: string;
+  lastModifiedAt?: string;
+  authenticationMode?: "Password";
+  addresses: Address[];
   defaultShippingAddressId?: string;
   defaultBillingAddressId?: string;
   shippingAddressIds?: string[];

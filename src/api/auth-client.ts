@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api.types";
-import { setAuthToken } from "../shared/utils/auth-token";
+import { getAuthToken, setAuthToken } from "../shared/utils/auth-token";
 import { handleRequestError, CONFIG, API_URL } from "../shared/utils/axios-config";
 
 const AUTH_URL = `https://auth.${CONFIG.region}.gcp.commercetools.com/oauth`;
@@ -87,20 +87,15 @@ export const customerService = {
     }
   },
 
-  async login(email: string, password: string): Promise<Customer> {
+  async getCustomer(): Promise<Customer> {
     try {
-      const { access_token } = await authService.getCustomerToken(email, password);
+      const access_token = getAuthToken();
 
-      const response: AxiosResponse<Customer> = await axios.post(
-        `${API_URL}/me/login`,
-        { email, password },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response: AxiosResponse<Customer> = await axios.get(`${API_URL}/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
 
       return response.data;
     } catch (error) {
