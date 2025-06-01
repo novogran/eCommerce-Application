@@ -47,6 +47,7 @@ function Catalog({
   usedFilters,
 }: CatalogProps): React.ReactElement {
   function handleApply(): void {
+    setCurrentPage(1);
     if (!getIsPriceFilterCorrect()) return;
     fetchProducts();
   }
