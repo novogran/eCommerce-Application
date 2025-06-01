@@ -26,7 +26,6 @@ const mockProduct = {
           centAmount: 12345,
           fractionDigits: 2,
         },
-        // discounted: undefined, // можно не указывать, если нет скидки
       },
     ],
   },
