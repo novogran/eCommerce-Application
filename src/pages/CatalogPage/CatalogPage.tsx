@@ -56,7 +56,8 @@ function CatalogPage() {
       }
       let sortString: string = "";
       if (sortParam) {
-        const sortField = sortParam === "name" ? "name.en" : "price";
+        const sortField =
+          sortParam === "name" ? "name.en-US" : "masterVariant.prices[0].value.centAmount";
         sortString = `${sortField} ${sortDir}`;
       }
       const combinedFilter: string | undefined =
@@ -67,6 +68,7 @@ function CatalogPage() {
       } else {
         response = await productService.getProducts(params, sortString);
       }
+      console.log(response.results);
       setProducts(response.results);
       setTotalPages(Math.ceil(response.total / PRODUCT_PER_PAGE));
     } catch (error) {
