@@ -1,6 +1,7 @@
-import { Container, Grid, Typography, Box, Button, TextField } from "@mui/material";
+import { Container, Grid, Typography, Box, Button, TextField, MenuItem } from "@mui/material";
 import { NavLink } from "react-router";
 import type { Product, ProductType } from "../../shared/types/product.types";
+import type { Dispatch, SetStateAction } from "react";
 
 export type CatalogProps = {
   categories: ProductType[];
@@ -8,6 +9,18 @@ export type CatalogProps = {
   maxPages: number;
   currentPage: number;
   setCurrentPage: (page: number) => void;
+  chosenCategoryId: string;
+  handleCategorySelection: (id: string) => void;
+  filterQuery: string;
+  setFilterQuery: Dispatch<SetStateAction<string>>;
+  priceMin: number;
+  setPriceMin: Dispatch<SetStateAction<number>>;
+  priceMax: number;
+  setPriceMax: Dispatch<SetStateAction<number>>;
+  sortParam: "name" | "price" | "";
+  setSortParam: Dispatch<SetStateAction<"name" | "price" | "">>;
+  sortDir: "asc" | "desc";
+  setSortDir: Dispatch<SetStateAction<"asc" | "desc">>;
 };
 
 function Catalog({
@@ -16,6 +29,18 @@ function Catalog({
   currentPage,
   maxPages,
   setCurrentPage,
+  chosenCategoryId,
+  handleCategorySelection,
+  filterQuery,
+  setFilterQuery,
+  priceMin,
+  setPriceMin,
+  priceMax,
+  setPriceMax,
+  sortParam,
+  setSortParam,
+  sortDir,
+  setSortDir,
 }: CatalogProps): React.ReactElement {
   return (
     <Container
@@ -39,12 +64,17 @@ function Catalog({
           <Typography variant="h4" component="h1" align="center" gutterBottom>
             Catalog
           </Typography>
-          <Box display={"flex"} justifyContent={"center"} gap={2} flexWrap={"wrap"}>
+          <Box display={"flex"} justifyContent={"center"} gap={2} flexWrap={"wrap"} my={1}>
             {categories.map((category, index) => {
               return (
-                <NavLink to="/" key={index}>
+                <Button
+                  key={index}
+                  sx={{ fontSize: "0.75rem" }}
+                  onClick={() => handleCategorySelection(category.id)}
+                  variant={chosenCategoryId === category.id ? "contained" : "outlined"}
+                >
                   {category.name}
-                </NavLink>
+                </Button>
               );
             })}
           </Box>
@@ -65,29 +95,57 @@ function Catalog({
             placeholder="Search..."
             name="search-field"
             type="text"
+            value={filterQuery}
+            onChange={(e) => setFilterQuery(e.target.value)}
             sx={{ m: 1, width: "90%" }}
-            onChange={() => {}}
           />
           <Box>
             <Typography textAlign={"center"}>Filters</Typography>
             <Box>
               <Typography>Price</Typography>
               <Box display={"flex"} gap={1} alignItems={"center"}>
-                <TextField placeholder="from" />
+                <TextField
+                  placeholder="from"
+                  value={priceMin}
+                  onChange={(e) => setPriceMin(Number.parseInt(e.target.value))}
+                />
                 <Typography>-</Typography>
-                <TextField placeholder="to" />
+                <TextField
+                  placeholder="to"
+                  value={priceMax}
+                  onChange={(e) => setPriceMax(Number.parseInt(e.target.value))}
+                />
               </Box>
             </Box>
           </Box>
-          <Box>
+          <Box mt={2} width={"100%"}>
             <Typography textAlign={"center"}>Sorting parameters</Typography>
-            <Box>
-              <Button variant="outlined" color="primary">
-                ASC
-              </Button>
-              <Button variant="outlined" color="primary">
-                DESC
-              </Button>
+            <Box
+              display={"flex"}
+              justifyContent={"center"}
+              sx={{ m: 1, flexDirection: { xs: "row", md: "column" } }}
+              gap={2}
+              alignItems={"center"}
+            >
+              <TextField fullWidth select variant="outlined" value={sortParam}>
+                <MenuItem value="" onClick={() => setSortParam("")}>
+                  -
+                </MenuItem>
+                <MenuItem value="name" onClick={() => setSortParam("name")}>
+                  by Name
+                </MenuItem>
+                <MenuItem value="price" onClick={() => setSortParam("price")}>
+                  by Price
+                </MenuItem>
+              </TextField>
+              <TextField fullWidth select variant="outlined" value={sortDir}>
+                <MenuItem value="asc" onClick={() => setSortDir("asc")}>
+                  ASC
+                </MenuItem>
+                <MenuItem value="desc" onClick={() => setSortDir("desc")}>
+                  DESC
+                </MenuItem>
+              </TextField>
             </Box>
           </Box>
           <Button variant="contained" color="primary" sx={{ margin: "1rem" }}>
