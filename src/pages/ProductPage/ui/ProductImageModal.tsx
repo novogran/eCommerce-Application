@@ -74,6 +74,7 @@ function ProductImageModal({
       <Box
         sx={{
           width: { xs: "280px", md: 500 },
+          aspectRatio: "1/1",
           position: "absolute",
           top: "50%",
           left: "50%",
@@ -86,6 +87,7 @@ function ProductImageModal({
           style={{
             borderRadius: "10px",
             width: "100%",
+            height: "100%",
           }}
           onClickCapture={(e) => e.stopPropagation()}
         />
