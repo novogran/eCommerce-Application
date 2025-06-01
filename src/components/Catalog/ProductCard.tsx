@@ -69,6 +69,7 @@ function ProductCard({ product }: ProductCardProps): React.ReactElement {
                   px={1}
                   py={0.5}
                   alignSelf={"center"}
+                  color={"red"}
                 >
                   {product.masterVariant?.prices[0].discounted.value.centAmount / 100}
                 </Typography>
