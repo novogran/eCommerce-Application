@@ -1,6 +1,7 @@
 import { ArrowCircleLeft, ArrowCircleRight } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { useState } from "react";
+import ProductImageModal from "./ProductImageModal";
 
 type ProductSliderProps = {
   images: {
@@ -10,6 +11,7 @@ type ProductSliderProps = {
 
 function ProductSlider({ images }: ProductSliderProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePrevClick = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? 0 : prev - 1));
@@ -20,7 +22,13 @@ function ProductSlider({ images }: ProductSliderProps) {
   };
 
   return (
-    <Box display="flex" alignItems="center" gap={1} position="relative">
+    <Box display="flex" alignItems="center" gap={1} position="relative" alignSelf="center">
+      {isModalOpen && (
+        <ProductImageModal
+          imageUrl={images[currentImageIndex].url}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
       <span
         style={{
           cursor: "pointer",
@@ -33,15 +41,19 @@ function ProductSlider({ images }: ProductSliderProps) {
       </span>
       <Box
         style={{
-          width: "345px",
-          height: "345px",
           backgroundImage: `url(${images[currentImageIndex].url})`,
           backgroundSize: "contain",
           backgroundColor: "white",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           borderRadius: "20px",
+          cursor: "pointer",
         }}
+        sx={{
+          width: { xs: "250px", md: "30vw" },
+          height: { xs: "300px", md: "60vh" },
+        }}
+        onClick={() => setIsModalOpen(true)}
       ></Box>
       <span
         style={{
@@ -54,7 +66,7 @@ function ProductSlider({ images }: ProductSliderProps) {
         <ArrowCircleRight style={{ width: "2rem", height: "2rem" }} />
       </span>
       {images.length > 1 && (
-        <Box display="flex" alignItems="center" gap={1} position="absolute" bottom={-20} left="50%">
+        <Box display="flex" alignItems="center" gap={1} position="absolute" bottom={-20} left="45%">
           {images.map((_, index) => (
             <span
               key={index}

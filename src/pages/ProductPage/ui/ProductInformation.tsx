@@ -4,7 +4,7 @@ import ProductSlider from "./ProductSlider";
 
 function ProductInformation({ data }: { data: Product }) {
   return (
-    <Box py={4} display="flex" flexDirection="column" gap={2}>
+    <Box py={4} display="flex" flexDirection="column" gap={2} width="100%">
       <Box
         display="flex"
         gap={2}
@@ -13,7 +13,7 @@ function ProductInformation({ data }: { data: Product }) {
         }}
       >
         {data.masterVariant.images && <ProductSlider images={data.masterVariant.images} />}
-        <Box>
+        <Box p={2}>
           <Typography variant="h4" fontWeight={600}>
             {data.name["en-US"]}
           </Typography>
