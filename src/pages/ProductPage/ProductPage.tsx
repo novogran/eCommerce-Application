@@ -7,8 +7,6 @@ function ProductPage() {
   const data: Product | undefined = useLoaderData();
   const navigate = useNavigate();
 
-  console.log(data);
-
   if (data === undefined) {
     return (
       <Box

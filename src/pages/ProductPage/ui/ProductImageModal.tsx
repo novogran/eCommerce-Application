@@ -1,7 +1,21 @@
-import { CloseOutlined } from "@mui/icons-material";
+import { ArrowCircleLeft, ArrowCircleRight, CloseOutlined } from "@mui/icons-material";
 import { Box } from "@mui/material";
 
-function ProductImageModal({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) {
+function ProductImageModal({
+  images,
+  currentImageIndex,
+  onClose,
+  handlePrevClick,
+  handleNextClick,
+}: {
+  images: {
+    url: string;
+  }[];
+  currentImageIndex: number;
+  onClose: () => void;
+  handlePrevClick: () => void;
+  handleNextClick: () => void;
+}) {
   return (
     <Box
       sx={{
@@ -16,8 +30,30 @@ function ProductImageModal({ imageUrl, onClose }: { imageUrl: string; onClose: (
       }}
       onClick={onClose}
     >
+      <ArrowCircleLeft
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: 20,
+          cursor: "pointer",
+          width: { xs: 20, md: 30 },
+        }}
+        onClick={handlePrevClick}
+        onClickCapture={(e) => e.stopPropagation()}
+      />
+      <ArrowCircleRight
+        sx={{
+          position: "absolute",
+          top: "50%",
+          right: 20,
+          cursor: "pointer",
+          width: { xs: 20, md: 30 },
+        }}
+        onClick={handleNextClick}
+        onClickCapture={(e) => e.stopPropagation()}
+      />
       <img
-        src={imageUrl}
+        src={images[currentImageIndex].url}
         alt="Product"
         width={300}
         style={{

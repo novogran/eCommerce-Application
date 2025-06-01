@@ -25,8 +25,11 @@ function ProductSlider({ images }: ProductSliderProps) {
     <Box display="flex" alignItems="center" gap={1} position="relative" alignSelf="center">
       {isModalOpen && (
         <ProductImageModal
-          imageUrl={images[currentImageIndex].url}
+          images={images}
+          currentImageIndex={currentImageIndex}
           onClose={() => setIsModalOpen(false)}
+          handlePrevClick={handlePrevClick}
+          handleNextClick={handleNextClick}
         />
       )}
       <span
