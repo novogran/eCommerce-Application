@@ -89,7 +89,7 @@ export const customerService = {
 
   async getCustomer(): Promise<Customer> {
     try {
-      const access_token = getAuthToken() || (await authService.getAnonymousToken());
+      const access_token = getAuthToken();
 
       const response: AxiosResponse<Customer> = await axios.get(`${API_URL}/me`, {
         headers: {

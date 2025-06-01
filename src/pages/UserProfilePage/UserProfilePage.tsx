@@ -7,8 +7,10 @@ import { editProfileService } from "../../api/edit-profile";
 import { validateInput } from "../../shared/utils/validation";
 import type { UserProfileErrorValidation } from "../../shared/types/userProfile.types";
 import { useSnackbar } from "../../components/CustomizedSnackbar";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function UserProfilePage() {
+  const { isLoggedIn } = useAuth();
   const { showMessage, SnackbarComponent } = useSnackbar();
   const [editMode, setEditMode] = useState(false);
   const [user, setUser] = useState<Customer>({
@@ -44,27 +46,29 @@ export default function UserProfilePage() {
   });
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const customer = await customerService.getCustomer();
-        setUser(customer);
-        setTempUser(customer);
+    if (isLoggedIn) {
+      const fetchUserData = async () => {
+        try {
+          const customer = await customerService.getCustomer();
+          setUser(customer);
+          setTempUser(customer);
 
-        setIsUserPropsValid((prev) => ({
-          ...prev,
-          isAddressesValidArr: customer.addresses.map(() => ({
-            isStreetValid: true,
-            isCityValid: true,
-            isPostalCodeValid: true,
-            isCountryValid: true,
-          })),
-        }));
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      }
-    };
+          setIsUserPropsValid((prev) => ({
+            ...prev,
+            isAddressesValidArr: customer.addresses.map(() => ({
+              isStreetValid: true,
+              isCityValid: true,
+              isPostalCodeValid: true,
+              isCountryValid: true,
+            })),
+          }));
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
+      };
 
-    fetchUserData();
+      fetchUserData();
+    }
   }, []);
 
   const handleEditToggle = () => {
