@@ -8,7 +8,8 @@ import { getAuthToken } from "../shared/utils/auth-token";
 export const productService = {
   async getProducts(params?: URLSearchParams): Promise<Product[]> {
     try {
-      const access_token = getAuthToken() ?? (await authService.getAnonymousToken());
+      const access_token = await this.getToken();
+
       const response: AxiosResponse<{ results: Product[] }> = await axios.get(
         `${API_URL}/product-projections`,
         {
@@ -29,7 +30,7 @@ export const productService = {
 
   async getProductById(productId: string): Promise<Product> {
     try {
-      const access_token = getAuthToken() ?? (await authService.getAnonymousToken());
+      const access_token = await this.getToken();
 
       const response: AxiosResponse<Product> = await axios.get(
         `${API_URL}/product-projections/${productId}`,
@@ -48,7 +49,7 @@ export const productService = {
 
   async getProductByKey(productKey: string): Promise<Product> {
     try {
-      const access_token = getAuthToken() ?? (await authService.getAnonymousToken());
+      const access_token = await this.getToken();
 
       const response: AxiosResponse<Product> = await axios.get(
         `${API_URL}/product-projections/key=${productKey}`,
@@ -63,5 +64,14 @@ export const productService = {
     } catch (error) {
       return handleRequestError(error);
     }
+  },
+  async getToken() {
+    if (!getAuthToken()) {
+      await authService.getAnonymousToken();
+    }
+
+    const access_token = getAuthToken();
+
+    return access_token;
   },
 };
