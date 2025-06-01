@@ -25,8 +25,8 @@ export type ProductVariant = {
   sku?: string;
   images?: {
     url: string;
-  };
-  prices: Price[];
+  }[];
+  prices?: Price[];
 };
 
 export type Price = {

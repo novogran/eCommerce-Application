@@ -113,10 +113,10 @@ function AddressForm({
             type="text"
             variant="outlined"
             disabled={useOneAddress}
-            value={address?.street}
+            value={address?.streetName}
             onChange={(e) => onAddressChange("street", e.target.value)}
           />
-          {address?.street && !isAddressValid?.isStreetValid && (
+          {address?.streetName && !isAddressValid?.isStreetValid && (
             <FormHelperText error sx={{ mx: 0 }}>
               {ERROR_MESSAGES.STREET_ERROR_TEXT}
             </FormHelperText>
