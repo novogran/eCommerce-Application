@@ -28,7 +28,6 @@ export const productService = {
 
   async getProducts(
     params?: { limit: number; offset: number },
-    sort?: string,
     filter?: string
   ): Promise<ProductResponse> {
     try {
@@ -38,9 +37,6 @@ export const productService = {
       };
       if (filter) {
         requestParams.where = filter;
-      }
-      if (sort) {
-        requestParams.sort = sort;
       }
       const response: AxiosResponse<ProductResponse> = await axios.get(
         `${API_URL}/product-projections`,
@@ -55,7 +51,7 @@ export const productService = {
     } catch (error) {
       return handleRequestError(error);
     }
-  },      
+  },
 
   async getProductById(productId: string): Promise<Product> {
     try {
@@ -91,6 +87,7 @@ export const productService = {
       return handleRequestError(error);
     }
   },
+
   async getToken() {
     if (!getAuthToken()) {
       await authService.getAnonymousToken();
