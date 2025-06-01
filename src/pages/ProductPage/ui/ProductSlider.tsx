@@ -54,6 +54,7 @@ function ProductSlider({ images }: ProductSliderProps) {
           width: { xs: "250px", md: "30vw" },
           height: { xs: "300px", md: "60vh" },
         }}
+        data-testid="image-container"
         onClick={() => setIsModalOpen(true)}
       ></Box>
       <span
@@ -71,6 +72,8 @@ function ProductSlider({ images }: ProductSliderProps) {
           {images.map((_, index) => (
             <span
               key={index}
+              role="button"
+              aria-label={`dot-${index}`}
               style={{
                 width: "10px",
                 height: "10px",
