@@ -49,7 +49,7 @@ function ProductInformation({ data }: { data: Product }) {
                 variant="h5"
                 sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" } }}
                 component="h1"
-                px={1}
+                pr={1}
                 py={0.5}
               >
                 {data.masterVariant?.prices && data.masterVariant?.prices[0].value.centAmount / 100}

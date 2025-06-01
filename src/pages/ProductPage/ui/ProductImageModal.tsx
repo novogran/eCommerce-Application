@@ -1,21 +1,31 @@
 import { ArrowCircleLeft, ArrowCircleRight, CloseOutlined } from "@mui/icons-material";
 import { Box } from "@mui/material";
+import { useState } from "react";
 
 function ProductImageModal({
   images,
   currentImageIndex,
   onClose,
-  handlePrevClick,
-  handleNextClick,
 }: {
   images: {
     url: string;
   }[];
   currentImageIndex: number;
   onClose: () => void;
-  handlePrevClick: () => void;
-  handleNextClick: () => void;
 }) {
+  const [currentImageIndexModal, setCurrentImageIndexModal] = useState(currentImageIndex);
+
+  const handlePrevClick = () => {
+    setCurrentImageIndexModal(
+      currentImageIndexModal === 0 ? images.length - 1 : currentImageIndexModal - 1
+    );
+  };
+
+  const handleNextClick = () => {
+    setCurrentImageIndexModal(
+      currentImageIndexModal === images.length - 1 ? 0 : currentImageIndexModal + 1
+    );
+  };
   return (
     <Box
       sx={{
@@ -24,7 +34,8 @@ function ProductImageModal({
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        backdropFilter: "blur(4px)",
         zIndex: 1101,
         cursor: "pointer",
       }}
@@ -34,36 +45,52 @@ function ProductImageModal({
         sx={{
           position: "absolute",
           top: "50%",
-          left: 20,
+          left: { xs: 5, md: 370 },
           cursor: "pointer",
-          width: { xs: 20, md: 30 },
+          width: { xs: "2rem", md: "3rem" },
+          height: { xs: "2rem", md: "3rem" },
+          color: "white",
         }}
-        onClick={handlePrevClick}
-        onClickCapture={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          handlePrevClick();
+        }}
       />
       <ArrowCircleRight
         sx={{
           position: "absolute",
           top: "50%",
-          right: 20,
+          right: { xs: 5, md: 370 },
           cursor: "pointer",
-          width: { xs: 20, md: 30 },
+          width: { xs: "2rem", md: "3rem" },
+          height: { xs: "2rem", md: "3rem" },
+          color: "white",
         }}
-        onClick={handleNextClick}
-        onClickCapture={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNextClick();
+        }}
       />
-      <img
-        src={images[currentImageIndex].url}
-        alt="Product"
-        width={300}
-        style={{
+      <Box
+        sx={{
+          width: { xs: "280px", md: 500 },
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
         }}
-        onClickCapture={(e) => e.stopPropagation()}
-      />
+      >
+        <img
+          src={images[currentImageIndexModal].url}
+          alt="Product"
+          style={{
+            borderRadius: "10px",
+            width: "100%",
+          }}
+          onClickCapture={(e) => e.stopPropagation()}
+        />
+      </Box>
+
       <CloseOutlined
         sx={{
           position: "absolute",

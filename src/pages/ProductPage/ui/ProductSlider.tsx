@@ -28,8 +28,6 @@ function ProductSlider({ images }: ProductSliderProps) {
           images={images}
           currentImageIndex={currentImageIndex}
           onClose={() => setIsModalOpen(false)}
-          handlePrevClick={handlePrevClick}
-          handleNextClick={handleNextClick}
         />
       )}
       <span
