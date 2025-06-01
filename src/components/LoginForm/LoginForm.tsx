@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { NavLink } from "react-router";
+import { ERROR_MESSAGES } from "../../shared/const/formValidationErrorLabels.const";
 
 export type LoginFormProps = {
   email: string;
@@ -34,9 +35,6 @@ function LoginForm({
   submitError,
 }: LoginFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = useState(false);
-  const EMAIL_ERROR_TEXT = "Incorrect email, must be: user@example.com";
-  const PASSWORD_ERROR_TEXT =
-    "Incorrect password, must be at least 8 characters long, contains at least one uppercase letter (A-Z), one lowercase letter (a-z), one digit (0-9)";
 
   return (
     <Container
@@ -75,7 +73,7 @@ function LoginForm({
               />
               {email && !isEmailValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {EMAIL_ERROR_TEXT}
+                  {ERROR_MESSAGES.EMAIL_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
@@ -91,7 +89,7 @@ function LoginForm({
               />
               {password && !isPasswordValid && (
                 <FormHelperText error sx={{ mx: 0 }}>
-                  {PASSWORD_ERROR_TEXT}
+                  {ERROR_MESSAGES.PASSWORD_ERROR_TEXT}
                 </FormHelperText>
               )}
             </Grid>
