@@ -1,8 +1,8 @@
-import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Container, Toolbar, Tooltip } from "@mui/material";
 import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import { removeAuthToken } from "../shared/utils/auth-token";
-import { Person } from "@mui/icons-material";
+import { ExitToApp, LoginSharp, Person, PersonAdd, ShoppingBag } from "@mui/icons-material";
 
 function Header() {
   const { isLoggedIn, logout } = useAuth();
@@ -16,7 +16,7 @@ function Header() {
       sx={{ width: "90vw", alignSelf: "center", borderRadius: "10px" }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+        <Toolbar disableGutters sx={{ justifyContent: { xs: "flex-end", md: "space-between" } }}>
           <NavLink to="/">
             <Button variant="text" color="inherit">
               eCommerce
@@ -25,39 +25,60 @@ function Header() {
           <Box display="flex" gap={2}>
             <NavLink to="/catalog">
               {({ isActive }) => (
-                <Button variant={isActive ? "contained" : "outlined"}>Catalog</Button>
+                <Tooltip title="Catalog" placement="bottom" arrow>
+                  <Button variant={isActive ? "contained" : "outlined"}>
+                    <ShoppingBag />
+                  </Button>
+                </Tooltip>
               )}
             </NavLink>
             {isLoggedIn ? (
               <>
                 <NavLink to="/user">
                   {({ isActive }) => (
-                    <Button variant={isActive ? "contained" : "outlined"}>
-                      <Person />
-                    </Button>
+                    <Tooltip title="Profile" placement="bottom" arrow>
+                      <Button variant={isActive ? "contained" : "outlined"}>
+                        <Person />
+                      </Button>
+                    </Tooltip>
                   )}
                 </NavLink>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    logout();
-                    removeAuthToken();
-                    navigate("/main");
-                  }}
-                >
-                  Logout
-                </Button>
+                <Tooltip title="Logout" placement="bottom" arrow>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      logout();
+                      removeAuthToken();
+                      navigate("/main");
+                    }}
+                  >
+                    <ExitToApp />
+                  </Button>
+                </Tooltip>
               </>
             ) : (
               <>
                 <NavLink to="/registration">
                   {({ isActive }) => (
-                    <Button variant={isActive ? "contained" : "outlined"}>Sign up</Button>
+                    <Tooltip title="Sign up" placement="bottom" arrow>
+                      <Button
+                        variant={isActive ? "contained" : "outlined"}
+                        sx={{
+                          fontSize: { xs: "0.5rem", md: "1rem" },
+                        }}
+                      >
+                        <PersonAdd />
+                      </Button>
+                    </Tooltip>
                   )}
                 </NavLink>
                 <NavLink to="/login">
                   {({ isActive }) => (
-                    <Button variant={isActive ? "contained" : "outlined"}>Login</Button>
+                    <Tooltip title="Login" placement="bottom" arrow>
+                      <Button variant={isActive ? "contained" : "outlined"}>
+                        <LoginSharp />
+                      </Button>
+                    </Tooltip>
                   )}
                 </NavLink>
               </>
