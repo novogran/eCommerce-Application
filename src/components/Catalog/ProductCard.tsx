@@ -60,7 +60,7 @@ function ProductCard({ product }: ProductCardProps): React.ReactElement {
             {product.name["en-US"]}
           </Typography>
           <Box display={"flex"}>
-            {product.masterVariant?.prices[0].discounted ? (
+            {product.masterVariant?.prices && product.masterVariant?.prices[0].discounted ? (
               <Box display={"flex"}>
                 <Typography
                   variant="h5"
@@ -92,7 +92,8 @@ function ProductCard({ product }: ProductCardProps): React.ReactElement {
                 px={1}
                 py={0.5}
               >
-                {product.masterVariant?.prices[0].value.centAmount / 100}
+                {product.masterVariant?.prices &&
+                  product.masterVariant?.prices[0].value.centAmount / 100}
               </Typography>
             )}
             <Typography
@@ -100,7 +101,7 @@ function ProductCard({ product }: ProductCardProps): React.ReactElement {
               sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem", md: "1.75rem" } }}
               alignSelf={"center"}
             >
-              {product.masterVariant?.prices[0].value.currencyCode}
+              {product.masterVariant?.prices && product.masterVariant?.prices[0].value.currencyCode}
             </Typography>
           </Box>
           <Typography component="p" px={2} sx={{ fontSize: { xs: "0.75rem", sm: "1rem" } }} mt={1}>
