@@ -10,6 +10,7 @@ vi.mock("./ProductSlider", () => ({
 
 const mockProduct = {
   id: "product-1",
+  key: "product-1",
   name: { "en-US": "Test Product" },
   description: { "en-US": "Test description" },
   masterVariant: {
