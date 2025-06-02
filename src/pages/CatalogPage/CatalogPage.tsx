@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { productService } from "../../api/products";
 import Catalog from "../../components/Catalog/Catalog";
 import type { Product, ProductResponse, ProductType } from "../../shared/types/product.types";
+import { getFilteredProducts } from "../../shared/utils/products-sorting";
 
 function CatalogPage() {
   const [categories, setCategories] = useState<ProductType[]>([]);
@@ -40,35 +41,25 @@ function CatalogPage() {
         limit: PRODUCT_PER_PAGE,
         offset: PRODUCT_PER_PAGE * (currentPage - 1),
       };
-      const filters: string[] = [];
+      let filter: string = "";
       if (chosenCategoryId) {
-        filters.push(`productType(id="${chosenCategoryId}")`);
+        filter = `productType(id="${chosenCategoryId}")`;
       }
-      if (filterQuery) {
-        filters.push(`name(en-US="${filterQuery}")`);
-      }
-      if (parseInt(priceMin) > 0 || parseInt(priceMin) < 400) {
-        const minCents = Math.round(parseInt(priceMin) * 100);
-        const maxCents = Math.round(parseInt(priceMax) * 100);
-        filters.push(
-          `variants(price.centAmount >= ${minCents} and price.centAmount <= ${maxCents})`
-        );
-      }
-      let sortString: string = "";
-      if (sortParam) {
-        const sortField = sortParam === "name" ? "name.en-US" : "variants.prices";
-        sortString = `${sortField} ${sortDir}`;
-      }
-      const combinedFilter: string | undefined =
-        filters.length > 0 ? filters.join(" and ") : undefined;
-      let response: ProductResponse;
-      if (combinedFilter) {
-        response = await productService.getProducts(params, sortString, combinedFilter);
-      } else {
-        response = await productService.getProducts(params, sortString);
-      }
-      setProducts(response.results);
-      setTotalPages(Math.ceil(response.total / PRODUCT_PER_PAGE));
+      const response: ProductResponse = await productService.getProducts(
+        { limit: 500, offset: 0 },
+        filter
+      );
+      const [products, total]: [Product[], number] = getFilteredProducts(
+        response.results,
+        params,
+        filterQuery,
+        priceMin,
+        priceMax,
+        sortParam,
+        sortDir
+      );
+      setProducts(products);
+      setTotalPages(Math.ceil(total / PRODUCT_PER_PAGE));
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
