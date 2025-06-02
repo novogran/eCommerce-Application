@@ -1,41 +1,9 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { Customer, CustomerDraft, TokenResponse } from "../shared/types/api.types";
-import { setAuthToken } from "../shared/utils/auth-token";
-
-const CONFIG = {
-  clientId: import.meta.env.VITE_CTP_CLIENT_ID || "",
-  clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET || "",
-  region: import.meta.env.VITE_CTP_PROJECT_REGION,
-  projectKey: import.meta.env.VITE_CTP_PROJECT_KEY,
-  scopes: {
-    anonymous: [
-      "create_anonymous_token",
-      "view_published_products",
-      "view_categories",
-      "manage_my_profile",
-    ],
-    customer: [
-      "manage_my_profile",
-      "manage_my_quote_requests",
-      "manage_my_business_units",
-      "manage_my_payments",
-      "manage_my_orders",
-      "manage_my_quotes",
-      "manage_my_shopping_lists",
-    ],
-  },
-};
+import { getAuthToken, setAuthToken } from "../shared/utils/auth-token";
+import { handleRequestError, CONFIG, API_URL } from "../shared/utils/axios-config";
 
 const AUTH_URL = `https://auth.${CONFIG.region}.gcp.commercetools.com/oauth`;
-const API_URL = `https://api.${CONFIG.region}.gcp.commercetools.com/${CONFIG.projectKey}`;
-
-const handleRequestError = (error: unknown): never => {
-  if (axios.isAxiosError(error)) {
-    const errorData = error.response?.data as { message?: string; error_description?: string };
-    throw new Error(errorData?.message || errorData?.error_description || error.message);
-  }
-  throw new Error("Unknown error occurred");
-};
 
 async function getToken(
   params: URLSearchParams,
@@ -119,20 +87,15 @@ export const customerService = {
     }
   },
 
-  async login(email: string, password: string): Promise<Customer> {
+  async getCustomer(): Promise<Customer> {
     try {
-      const { access_token } = await authService.getCustomerToken(email, password);
+      const access_token = getAuthToken();
 
-      const response: AxiosResponse<Customer> = await axios.post(
-        `${API_URL}/me/login`,
-        { email, password },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response: AxiosResponse<Customer> = await axios.get(`${API_URL}/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
 
       return response.data;
     } catch (error) {

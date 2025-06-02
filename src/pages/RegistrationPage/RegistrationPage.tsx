@@ -115,8 +115,8 @@ function RegistrationPage() {
   function getIsAddressValid(address: Address | undefined): AddressErrorValidation {
     if (!address) return initialAddressValidationState;
     return {
-      isStreetValid: address.street
-        ? validateInput({ type: "street", value: address.street })
+      isStreetValid: address.streetName
+        ? validateInput({ type: "street", value: address.streetName })
         : false,
       isCityValid: address.city ? validateInput({ type: "city", value: address?.city }) : false,
       isPostalCodeValid: address.postalCode
@@ -144,7 +144,7 @@ function RegistrationPage() {
               {
                 postalCode: userProps.shippingAddress.postalCode,
                 city: userProps.shippingAddress.city,
-                streetName: userProps.shippingAddress.street,
+                streetName: userProps.shippingAddress.streetName,
                 country: userProps.shippingAddress.country,
               },
               {
@@ -155,8 +155,8 @@ function RegistrationPage() {
                   ? userProps.shippingAddress.city
                   : userProps.billingAddress.city,
                 streetName: useOneAddress
-                  ? userProps.shippingAddress.street
-                  : userProps.billingAddress.street,
+                  ? userProps.shippingAddress.streetName
+                  : userProps.billingAddress.streetName,
                 country: useOneAddress
                   ? userProps.shippingAddress.country
                   : userProps.billingAddress.country,
@@ -221,7 +221,7 @@ function RegistrationPage() {
   const initialAddressState: Address = {
     country: "BY",
     city: "",
-    street: "",
+    streetName: "",
     postalCode: "",
   };
   const initialUserPropsState: UserRegistration = {

@@ -8,9 +8,14 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import MainPage from "./pages/MainPage/MainPage";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import NotFound from "./pages/NotFound/NotFound";
-import ProtectedRoute from "./shared/utils/ProtectedRoute";
+import ProtectedRoute from "./shared/utils/route/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import DefaultLayout from "./layout/DefaultLayout";
+import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
+import CatalogPage from "./pages/CatalogPage/CatalogPage";
+import ProductPage from "./pages/ProductPage/ProductPage";
+import UserRoute from "./shared/utils/route/UserRoute";
+import productLoader from "./pages/ProductPage/product-loader";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +45,23 @@ const router = createBrowserRouter([
             <RegistrationPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/user",
+        element: (
+          <UserRoute>
+            <UserProfilePage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/catalog",
+        element: <CatalogPage />,
+      },
+      {
+        path: "/product/:key",
+        element: <ProductPage />,
+        loader: productLoader,
       },
       {
         path: "*",
