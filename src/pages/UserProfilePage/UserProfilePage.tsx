@@ -69,7 +69,7 @@ export default function UserProfilePage() {
 
       fetchUserData();
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const handleEditToggle = () => {
     if (editMode) {
