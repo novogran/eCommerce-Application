@@ -109,12 +109,12 @@ function AddressForm({
           <TextField
             fullWidth
             label="Street*"
-            name="street"
+            name="streetName"
             type="text"
             variant="outlined"
             disabled={useOneAddress}
             value={address?.streetName}
-            onChange={(e) => onAddressChange("street", e.target.value)}
+            onChange={(e) => onAddressChange("streetName", e.target.value)}
           />
           {address?.streetName && !isAddressValid?.isStreetValid && (
             <FormHelperText error sx={{ mx: 0 }}>
