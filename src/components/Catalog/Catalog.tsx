@@ -2,6 +2,7 @@ import { Container, Grid, Typography, Box, Button, TextField, MenuItem } from "@
 import type { Product, ProductType } from "../../shared/types/product.types";
 import type { Dispatch, SetStateAction } from "react";
 import ProductCard from "./ProductCard";
+import type { Cart } from "@commercetools/platform-sdk";
 
 export type CatalogProps = {
   categories: ProductType[];
@@ -23,6 +24,8 @@ export type CatalogProps = {
   setSortDir: Dispatch<SetStateAction<"asc" | "desc">>;
   fetchProducts: () => Promise<void>;
   usedFilters: string;
+  handleAddToCart: (sku: string) => void;
+  cart: Cart | undefined;
 };
 
 function Catalog({
@@ -45,6 +48,8 @@ function Catalog({
   setSortDir,
   fetchProducts,
   usedFilters,
+  handleAddToCart,
+  cart,
 }: CatalogProps): React.ReactElement {
   function handleApply(): void {
     setCurrentPage(1);
@@ -220,7 +225,18 @@ function Catalog({
           </Box>
           {products.length > 0 ? (
             products.map((product, index) => {
-              return <ProductCard key={index} product={product}></ProductCard>;
+              return (
+                <ProductCard
+                  key={index}
+                  product={product}
+                  isInCart={
+                    !!cart?.lineItems.filter((item) => item.productKey === product.key).length
+                  }
+                  handleAddToCart={() => {
+                    if (product.masterVariant.sku) handleAddToCart(product.masterVariant.sku);
+                  }}
+                ></ProductCard>
+              );
             })
           ) : (
             <Typography variant="h3" textAlign={"center"} my={3}>
