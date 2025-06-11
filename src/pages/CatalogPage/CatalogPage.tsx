@@ -37,7 +37,7 @@ function CatalogPage() {
   useEffect((): void => {
     const fetchCart = async () => {
       try {
-        const cart = await cartService.getCart();
+        const cart = await cartService.createCart();
         setCart(cart);
       } catch (error) {
         console.error("Failed to fetch cart", error);
@@ -63,7 +63,8 @@ function CatalogPage() {
     try {
       setLoadingCart(true);
       if (!cart) {
-        const newCart = await cartService.createCart();
+        await cartService.createCart();
+        const newCart = await cartService.getCart();
         setCart(newCart);
         await cartService.addItemToCart(newCart.id, newCart.version, sku);
       } else {
