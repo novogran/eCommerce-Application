@@ -1,14 +1,21 @@
 import { NavLink } from "react-router";
 import type { Product } from "../../shared/types/product.types";
 import { Box, Button, Typography } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 type ProductCardProps = {
   product: Product;
   isInCart: boolean;
   handleAddToCart: () => void;
+  isLoadingCart: boolean;
 };
 
-function ProductCard({ product, isInCart, handleAddToCart }: ProductCardProps): React.ReactElement {
+function ProductCard({
+  product,
+  isInCart,
+  handleAddToCart,
+  isLoadingCart,
+}: ProductCardProps): React.ReactElement {
   return (
     <Box display={"flex"} flexDirection={"column"} m={1}>
       <NavLink to={"/product/" + product.key} style={{ textDecoration: "none", color: "inherit" }}>
@@ -133,7 +140,13 @@ function ProductCard({ product, isInCart, handleAddToCart }: ProductCardProps): 
           marginRight: "2rem",
         }}
       >
-        {isInCart ? "In cart" : "Add to cart"}
+        {isLoadingCart ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : isInCart ? (
+          "In cart"
+        ) : (
+          "Add to cart"
+        )}
       </Button>
     </Box>
   );

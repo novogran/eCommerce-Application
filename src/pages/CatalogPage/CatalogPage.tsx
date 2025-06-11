@@ -19,6 +19,7 @@ function CatalogPage() {
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [usedFilters, setUsedFilters] = useState<string>("");
   const [cart, setCart] = useState<Cart>();
+  const [loadingCart, setLoadingCart] = useState(false);
   const PRODUCT_PER_PAGE = 3;
 
   useEffect((): void => {
@@ -60,6 +61,7 @@ function CatalogPage() {
 
   async function handleAddToCart(sku: string) {
     try {
+      setLoadingCart(true);
       if (!cart) {
         const newCart = await cartService.createCart();
         setCart(newCart);
@@ -70,6 +72,8 @@ function CatalogPage() {
       await updateCart();
     } catch (error) {
       console.error("Error: ", error);
+    } finally {
+      setLoadingCart(false);
     }
   }
 
@@ -149,6 +153,7 @@ function CatalogPage() {
       usedFilters={usedFilters}
       cart={cart}
       handleAddToCart={handleAddToCart}
+      loadingCart={loadingCart}
     />
   );
 }

@@ -26,6 +26,7 @@ export type CatalogProps = {
   usedFilters: string;
   handleAddToCart: (sku: string) => void;
   cart: Cart | undefined;
+  loadingCart: boolean;
 };
 
 function Catalog({
@@ -50,6 +51,7 @@ function Catalog({
   usedFilters,
   handleAddToCart,
   cart,
+  loadingCart,
 }: CatalogProps): React.ReactElement {
   function handleApply(): void {
     setCurrentPage(1);
@@ -232,6 +234,7 @@ function Catalog({
                   isInCart={
                     !!cart?.lineItems.filter((item) => item.productKey === product.key).length
                   }
+                  isLoadingCart={loadingCart}
                   handleAddToCart={() => {
                     if (product.masterVariant.sku) handleAddToCart(product.masterVariant.sku);
                   }}
