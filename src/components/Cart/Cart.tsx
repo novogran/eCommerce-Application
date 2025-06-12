@@ -42,6 +42,9 @@ type CartProps = {
   onRemoveItem: (lineItemId: string) => void;
   onUpdateQuantity: (lineItemId: string, quantity: number) => void;
   onClearCart: () => void;
+  onApplyPromoCode: () => void;
+  promoCode: string;
+  setPromoCode: (code: string) => void;
 };
 
 export default function CartComponent({
@@ -51,6 +54,9 @@ export default function CartComponent({
   onRemoveItem,
   onUpdateQuantity,
   onClearCart,
+  onApplyPromoCode,
+  promoCode,
+  setPromoCode,
 }: CartProps) {
   const [openClearDialog, setOpenClearDialog] = useState(false);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>({});
@@ -83,6 +89,13 @@ export default function CartComponent({
   const handleConfirmClearCart = () => {
     onClearCart();
     setOpenClearDialog(false);
+  };
+
+  const calculateOriginalTotal = (cart: Cart) => {
+    return cart.lineItems.reduce(
+      (total, item) => total + (item.price.value.centAmount / 100) * item.quantity,
+      0
+    );
   };
 
   if (loading) {
@@ -120,9 +133,22 @@ export default function CartComponent({
 
   const totalPrice = cart.totalPrice.centAmount / 100;
   const currency = cart.totalPrice.currencyCode;
+  const hasDiscounts = cart.discountCodes && cart.discountCodes.length > 0;
+  const originalTotal = calculateOriginalTotal(cart);
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Box mb={4}>
+        <Typography variant="h6" gutterBottom>
+          Active Promo Codes
+        </Typography>
+        <Paper elevation={2} sx={{ p: 2 }}>
+          <Typography>RSSCHOOL5 - 5% off all cart</Typography>
+          <Typography>RSSCHOOL200 - Total Price of the Order is 200$</Typography>
+          <Typography>RSSCHOOL40 - 40$ discount</Typography>
+        </Paper>
+      </Box>
+
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">Shopping Cart</Typography>
         <Button
@@ -208,18 +234,53 @@ export default function CartComponent({
           })}
         </List>
 
+        <Box mt={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            Promo Code
+          </Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <TextField
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="Enter promo code"
+              size="small"
+              fullWidth
+            />
+            <Button variant="contained" onClick={onApplyPromoCode}>
+              Apply
+            </Button>
+          </Box>
+        </Box>
+
         <Box mt={4} pt={2} borderTop={1} borderColor="divider">
           <Grid container justifyContent="space-between">
             <Grid>
               <Typography variant="h6">Total:</Typography>
             </Grid>
             <Grid>
+              {hasDiscounts && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textDecoration: "line-through",
+                    color: "text.secondary",
+                    textAlign: "right",
+                  }}
+                >
+                  {currency} {originalTotal.toFixed(2)}
+                </Typography>
+              )}
               <Box display="flex" alignItems="center">
                 <MonetizationOnIcon color="primary" sx={{ mr: 1 }} />
                 <Typography variant="h5">
                   {currency} {totalPrice.toFixed(2)}
                 </Typography>
               </Box>
+              {hasDiscounts && (
+                <Typography variant="body2" color="success.main" textAlign="right">
+                  You saved {currency} {(originalTotal - totalPrice).toFixed(2)}!
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </Box>

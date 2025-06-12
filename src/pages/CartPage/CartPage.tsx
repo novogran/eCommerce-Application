@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useSnackbar } from "../../components/CustomizedSnackbar";
 import { cartService } from "../../api/cart";
 import CartComponent from "../../components/Cart/Cart";
-import { authService } from "../../api/auth-client";
 import type { Cart } from "@commercetools/platform-sdk";
 
 export default function CartPage() {
@@ -10,15 +9,13 @@ export default function CartPage() {
   const [cart, setCart] = useState<Cart | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [promoCode, setPromoCode] = useState("");
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        await authService.getCustomerToken("user@example.com", "securePassword123");
         setLoading(true);
         const cartData = await cartService.getCart();
-        // cartData = await cartService.addItemToCart(cartData.id, cartData.version, "255");
-        // cartData = await cartService.addItemToCart(cartData.id, cartData.version, "216");
         setCart(cartData);
         setError(undefined);
       } catch (err) {
@@ -77,6 +74,20 @@ export default function CartPage() {
     }
   };
 
+  const handleApplyPromoCode = async () => {
+    try {
+      if (!cart || !promoCode.trim()) return;
+
+      const updatedCart = await cartService.addDiscountCode(cart.id, cart.version, promoCode);
+      setCart(updatedCart);
+      showMessage("Promo code applied successfully", "success");
+      setPromoCode("");
+    } catch (error) {
+      console.error(error);
+      showMessage("Failed to apply promo code", "error");
+    }
+  };
+
   return (
     <>
       <CartComponent
@@ -86,6 +97,9 @@ export default function CartPage() {
         onRemoveItem={handleRemoveItem}
         onUpdateQuantity={handleUpdateQuantity}
         onClearCart={handleClearCart}
+        onApplyPromoCode={handleApplyPromoCode}
+        promoCode={promoCode}
+        setPromoCode={setPromoCode}
       />
       <SnackbarComponent />
     </>
