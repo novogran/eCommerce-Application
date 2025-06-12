@@ -1,12 +1,5 @@
 const TOKEN_KEY = "auth_token";
-
-type TokenResponse = {
-  access_token: string;
-  expires_in: number;
-  refresh_token?: string;
-  scope: string;
-  token_type: string;
-};
+import type { TokenResponse } from "../types/api.types";
 
 export const getTokenObject = (): TokenResponse | undefined => {
   const tokenObject = sessionStorage.getItem(TOKEN_KEY);
