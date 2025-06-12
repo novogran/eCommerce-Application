@@ -141,6 +141,32 @@ export const cartService = {
     }
   },
 
+  async addDiscountCode(cartId: string, cartVersion: number, code: string): Promise<Cart> {
+    try {
+      const access_token = await this.getToken();
+      const response: AxiosResponse<Cart> = await axios.post(
+        `${API_URL}/me/carts/${cartId}`,
+        {
+          version: cartVersion,
+          actions: [
+            {
+              action: "addDiscountCode",
+              code,
+            },
+          ],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return handleRequestError(error);
+    }
+  },
+
   async getToken() {
     if (!getAuthToken()) {
       await authService.getAnonymousToken();
