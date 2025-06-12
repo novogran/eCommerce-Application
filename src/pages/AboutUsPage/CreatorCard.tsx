@@ -55,7 +55,7 @@ function CreatorCard({ name, job, bio, doneFeatures, githubLink, photoUrl }: Cre
         {job}
       </Typography>
       <Divider orientation="horizontal" sx={{ width: "100%" }}></Divider>
-      <Typography textAlign={"center"} m={1} height={"7rem"}>
+      <Typography textAlign={"center"} m={1} height={"10rem"}>
         {bio}
       </Typography>
       <Divider orientation="horizontal" sx={{ width: "100%" }}></Divider>

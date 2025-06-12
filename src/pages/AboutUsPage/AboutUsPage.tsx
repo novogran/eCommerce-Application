@@ -17,7 +17,7 @@ function AboutUsPage() {
         <CreatorCard
           name="Semenenko Vladislav"
           job="Student"
-          bio="From Minsk, currently studying at BSUIR in the 4th year on Game Design."
+          bio="21, from Minsk, now studying at BSUIR on the 4th year of study, specializing in game design. Planning to finish in 2025, in addition to that taking Front End courses."
           doneFeatures={[
             "Catalog Page",
             "Login Page Layout",
@@ -30,8 +30,8 @@ function AboutUsPage() {
         ></CreatorCard>
         <CreatorCard
           name="Novogran Vitaly"
-          job="Student. Teamlead"
-          bio="Currently studying to become a FrontEnd Developer. 4 course"
+          job="Developer. Teamlead"
+          bio="29, developer from Minsk who started with Java (Android apps), switched to Kotlin, and later learned front-end (HTML/CSS/JS). He enjoys creative problem-solving in coding. Outside work, he likes gaming, fixing tech, and swimming. Aspires to grow and share his knowledge."
           doneFeatures={[
             "Validation",
             "Profile Page",
@@ -45,7 +45,7 @@ function AboutUsPage() {
         <CreatorCard
           name="Vasilev Aleksandr"
           job="Frontend developer"
-          bio="From Yekaterinburg, graduated from UrFU in Software Engineering. Currently studying for a master's degree in Human-Computer Interaction."
+          bio="23, from Yekaterinburg, graduated from UrFU in Software Engineering. Currently studying for a master's degree in Human-Computer Interaction."
           doneFeatures={[
             "Detailed Product Page",
             "Header",
@@ -58,7 +58,7 @@ function AboutUsPage() {
         ></CreatorCard>
       </Box>
       <Link to="https://rs.school/" target="_blank">
-        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mt={2}>
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} my={2}>
           <Box
             component="img"
             src="/rss-logo.svg"
