@@ -26,9 +26,7 @@ async function getToken(
       config
     );
 
-    if (!response.data.scope.includes("create_anonymous_token")) {
-      setAuthToken(response.data.access_token);
-    }
+    setAuthToken(response.data);
 
     return response.data;
   } catch (error) {
