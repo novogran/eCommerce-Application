@@ -99,7 +99,7 @@ function BurgerMenu() {
           </NavLink>
         </MenuItem>
         {isLoggedIn ? (
-          <>
+          <Box>
             <MenuItem onClick={handleMenuClose} sx={getMenuItemStyles("/user")}>
               <NavLink
                 to="/user"
@@ -125,9 +125,9 @@ function BurgerMenu() {
                 Logout
               </Box>
             </MenuItem>
-          </>
+          </Box>
         ) : (
-          <>
+          <Box>
             <MenuItem onClick={handleMenuClose} sx={getMenuItemStyles("/registration")}>
               <NavLink
                 to="/registration"
@@ -150,7 +150,7 @@ function BurgerMenu() {
                 </Box>
               </NavLink>
             </MenuItem>
-          </>
+          </Box>
         )}
       </Menu>
     </Box>
