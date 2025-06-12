@@ -12,6 +12,7 @@ export const CONFIG = {
       "view_published_products",
       "view_categories",
       "manage_my_profile",
+      "manage_my_orders",
     ],
     customer: [
       "manage_my_profile",
