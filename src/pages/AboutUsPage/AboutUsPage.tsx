@@ -40,7 +40,7 @@ function AboutUsPage() {
             "Repository and Task Board Setup",
           ]}
           githubLink="https://github.com/novogran"
-          photoUrl="/404.jpg"
+          photoUrl="/VitalyAvatar.jpg"
         ></CreatorCard>
         <CreatorCard
           name="Vasilev Aleksandr"
