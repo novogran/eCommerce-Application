@@ -2,7 +2,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { Link } from "react-router";
 import CreatorCard from "./CreatorCard";
 
-function AboutUs() {
+function AboutUsPage() {
   return (
     <Container>
       <Typography variant="h3" textAlign={"center"} my={2}>
@@ -74,4 +74,4 @@ function AboutUs() {
   );
 }
 
-export default AboutUs;
+export default AboutUsPage;

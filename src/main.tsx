@@ -16,7 +16,7 @@ import CatalogPage from "./pages/CatalogPage/CatalogPage";
 import ProductPage from "./pages/ProductPage/ProductPage";
 import UserRoute from "./shared/utils/route/UserRoute";
 import productLoader from "./pages/ProductPage/product-loader";
-import AboutUs from "./pages/AboutUs/AboutUs";
+import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
 
 const router = createBrowserRouter([
   {
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <AboutUs />,
+        element: <AboutUsPage />,
       },
       {
         path: "*",
