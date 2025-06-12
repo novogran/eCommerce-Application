@@ -124,6 +124,23 @@ export const cartService = {
     }
   },
 
+  async deleteCart(cartId: string, cartVersion: number): Promise<Cart> {
+    try {
+      const access_token = await this.getToken();
+      const response: AxiosResponse<Cart> = await axios.delete(
+        `${API_URL}/me/carts/${cartId}?version=${cartVersion}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return handleRequestError(error);
+    }
+  },
+
   async getToken() {
     if (!getAuthToken()) {
       await authService.getAnonymousToken();
