@@ -3,6 +3,8 @@ import { productService } from "../../api/products";
 import Catalog from "../../components/Catalog/Catalog";
 import type { Product, ProductResponse, ProductType } from "../../shared/types/product.types";
 import { getFilteredProducts } from "../../shared/utils/products-sorting";
+import { cartService } from "../../api/cart";
+import type { Cart } from "@commercetools/platform-sdk";
 
 function CatalogPage() {
   const [categories, setCategories] = useState<ProductType[]>([]);
@@ -16,6 +18,8 @@ function CatalogPage() {
   const [sortParam, setSortParam] = useState<"name" | "price" | "">("");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [usedFilters, setUsedFilters] = useState<string>("");
+  const [cart, setCart] = useState<Cart>();
+  const [loadingCart, setLoadingCart] = useState(false);
   const PRODUCT_PER_PAGE = 3;
 
   useEffect((): void => {
@@ -31,8 +35,48 @@ function CatalogPage() {
   }, []);
 
   useEffect((): void => {
+    const fetchCart = async () => {
+      try {
+        const cart = await cartService.createCart();
+        setCart(cart);
+      } catch (error) {
+        console.error("Failed to fetch cart", error);
+      }
+    };
+    fetchCart();
+  }, []);
+
+  useEffect((): void => {
     setCurrentPage(1);
   }, [chosenCategoryId]);
+
+  async function updateCart() {
+    try {
+      const updatedCart = await cartService.getCart();
+      setCart(updatedCart);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async function handleAddToCart(sku: string) {
+    try {
+      setLoadingCart(true);
+      if (!cart) {
+        await cartService.createCart();
+        const newCart = await cartService.getCart();
+        setCart(newCart);
+        await cartService.addItemToCart(newCart.id, newCart.version, sku);
+      } else {
+        await cartService.addItemToCart(cart.id, cart.version, sku);
+      }
+      await updateCart();
+    } catch (error) {
+      console.error("Error: ", error);
+    } finally {
+      setLoadingCart(false);
+    }
+  }
 
   const fetchProducts = async (): Promise<void> => {
     try {
@@ -108,6 +152,9 @@ function CatalogPage() {
       setSortDir={setSortDir}
       fetchProducts={fetchProducts}
       usedFilters={usedFilters}
+      cart={cart}
+      handleAddToCart={handleAddToCart}
+      loadingCart={loadingCart}
     />
   );
 }

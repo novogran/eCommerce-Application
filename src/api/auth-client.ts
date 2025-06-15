@@ -26,7 +26,7 @@ async function getToken(
       config
     );
 
-    setAuthToken(response.data.access_token);
+    setAuthToken(response.data);
 
     return response.data;
   } catch (error) {
