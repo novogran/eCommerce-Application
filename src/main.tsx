@@ -17,6 +17,7 @@ import ProductPage from "./pages/ProductPage/ProductPage";
 import UserRoute from "./shared/utils/route/UserRoute";
 import productLoader from "./pages/ProductPage/product-loader";
 import CartPage from "./pages/CartPage/CartPage";
+
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
 
 const router = createBrowserRouter([
