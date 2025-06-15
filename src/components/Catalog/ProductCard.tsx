@@ -30,6 +30,7 @@ function ProductCard({
             "&:hover": {
               boxShadow: 6,
               bgcolor: "action.hover",
+              padding: "1rem 0",
             },
           }}
         >
