@@ -190,7 +190,9 @@ export default function CartComponent({
 
         <List>
           {cart.lineItems.map((item: LineItem, index: number) => {
-            const itemPrice = item.price.value.centAmount / 100;
+            const itemPrice = item.price.discounted
+              ? item.price.discounted?.value.centAmount / 100
+              : item.price.value.centAmount / 100;
             const totalItemPrice = itemPrice * item.quantity;
             const imageUrl = item.variant.images?.[0]?.url || "";
 
