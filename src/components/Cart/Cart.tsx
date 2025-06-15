@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  useMediaQuery,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -25,7 +26,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ClearIcon from "@mui/icons-material/Clear";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 import type { Cart, LineItem } from "@commercetools/platform-sdk";
 import { Link } from "react-router";
@@ -61,6 +62,9 @@ export default function CartComponent({
   const [openClearDialog, setOpenClearDialog] = useState(false);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>({});
   const [focusedInput, setFocusedInput] = useState<string | undefined>(undefined);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isVerySmallScreen = useMediaQuery("(max-width:440px)");
 
   React.useEffect(() => {
     if (cart) {
@@ -123,30 +127,39 @@ export default function CartComponent({
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" mt={4}>
-        <CircularProgress />
+        <CircularProgress size={isSmallScreen ? 24 : 40} />
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Box textAlign="center" mt={4}>
-        <Typography color="error">{error}</Typography>
+      <Box textAlign="center" mt={4} px={2}>
+        <Typography variant={isSmallScreen ? "body1" : "h6"} color="error">
+          {error}
+        </Typography>
       </Box>
     );
   }
 
   if (!cart || cart.lineItems.length === 0) {
     return (
-      <Box textAlign="center" mt={4}>
-        <ShoppingCartIcon fontSize="large" />
-        <Typography variant="h6" mt={2}>
+      <Box textAlign="center" mt={4} px={2}>
+        <ShoppingCartIcon fontSize={isSmallScreen ? "medium" : "large"} />
+        <Typography variant={isSmallScreen ? "h6" : "h5"} mt={2}>
           Your cart is empty
         </Typography>
-        <Typography variant="body1" mt={2}>
+        <Typography variant={isSmallScreen ? "body2" : "body1"} mt={2}>
           Start shopping to add items to your cart!
         </Typography>
-        <Button variant="contained" color="primary" component={Link} to="/catalog" sx={{ mt: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/catalog"
+          sx={{ mt: 3 }}
+          size={isSmallScreen ? "small" : "medium"}
+        >
           Browse Catalog
         </Button>
       </Box>
@@ -159,31 +172,45 @@ export default function CartComponent({
   const originalTotal = calculateOriginalTotal(cart);
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Box mb={4}>
-        <Typography variant="h6" gutterBottom>
+    <Container maxWidth="md" sx={{ mt: isSmallScreen ? 2 : 4, px: isVerySmallScreen ? 1 : 2 }}>
+      <Box mb={isSmallScreen ? 2 : 4}>
+        <Typography variant={isSmallScreen ? "subtitle1" : "h6"} gutterBottom>
           Active Promo Codes
         </Typography>
-        <Paper elevation={2} sx={{ p: 2 }}>
-          <Typography>RSSCHOOL5 - 5% off all cart</Typography>
-          <Typography>RSSCHOOL200 - Total Price of the Order is 200$</Typography>
-          <Typography>RSSCHOOL40 - 40$ discount</Typography>
+        <Paper elevation={2} sx={{ p: isSmallScreen ? 1 : 2 }}>
+          <Typography variant={isSmallScreen ? "body2" : "body1"}>
+            RSSCHOOL5 - 5% off all cart
+          </Typography>
+          <Typography variant={isSmallScreen ? "body2" : "body1"}>
+            RSSCHOOL200 - Total Price of the Order is 200$
+          </Typography>
+          <Typography variant={isSmallScreen ? "body2" : "body1"}>
+            RSSCHOOL40 - 40$ discount
+          </Typography>
         </Paper>
       </Box>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Typography variant="h4">Shopping Cart</Typography>
+      <Box
+        display="flex"
+        flexDirection={isSmallScreen ? "column" : "row"}
+        justifyContent="space-between"
+        alignItems={isSmallScreen ? "flex-start" : "center"}
+        mb={isSmallScreen ? 2 : 4}
+        gap={isSmallScreen ? 1 : 0}
+      >
+        <Typography variant={isSmallScreen ? "h5" : "h4"}>Shopping Cart</Typography>
         <Button
           variant="outlined"
           color="error"
-          startIcon={<ClearIcon />}
+          startIcon={isSmallScreen ? undefined : <ClearIcon />}
           onClick={handleClearCartClick}
+          size={isSmallScreen ? "small" : "medium"}
         >
-          Clear Cart
+          {isSmallScreen ? <ClearIcon /> : "Clear Cart"}
         </Button>
       </Box>
 
-      <StyledPaper elevation={3}>
+      <StyledPaper elevation={3} sx={{ p: isSmallScreen ? 2 : 3 }}>
         <Typography variant="subtitle1" color="textSecondary" gutterBottom>
           {cart.lineItems.length} item(s) in cart
         </Typography>
@@ -198,29 +225,56 @@ export default function CartComponent({
 
             return (
               <React.Fragment key={item.id}>
-                <ListItem alignItems="center">
-                  <ListItemAvatar>
+                <ListItem
+                  alignItems="center"
+                  sx={{
+                    flexDirection: isVerySmallScreen ? "column" : "row",
+                    alignItems: isVerySmallScreen ? "flex-start" : "center",
+                    py: isSmallScreen ? 1 : 2,
+                  }}
+                >
+                  <ListItemAvatar sx={{ minWidth: isVerySmallScreen ? "100%" : undefined }}>
                     <Avatar
                       alt={item.name["en"]}
                       src={imageUrl}
                       variant="square"
-                      sx={{ width: 80, height: 80, mr: 2 }}
+                      sx={{
+                        width: isSmallScreen ? 60 : 80,
+                        height: isSmallScreen ? 60 : 80,
+                        mr: isSmallScreen ? 1 : 2,
+                      }}
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={<Typography variant="h6">{item.name["en"]}</Typography>}
+                    primary={
+                      <Typography variant={isSmallScreen ? "subtitle1" : "h6"}>
+                        {item.name["en"]}
+                      </Typography>
+                    }
                     secondary={
-                      <Typography variant="body2" color="text.primary">
+                      <Typography
+                        variant={isSmallScreen ? "caption" : "body2"}
+                        color="text.primary"
+                      >
                         {currency} {itemPrice.toFixed(2)} each
                       </Typography>
                     }
+                    sx={{ mt: isVerySmallScreen ? 1 : 0 }}
                   />
-                  <Box display="flex" alignItems="center">
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    sx={{
+                      width: isVerySmallScreen ? "100%" : undefined,
+                      mt: isVerySmallScreen ? 1 : 0,
+                    }}
+                  >
                     <IconButton
                       onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
                       aria-label="Reduce quantity"
+                      size={isSmallScreen ? "small" : "medium"}
                     >
-                      <RemoveIcon />
+                      <RemoveIcon fontSize={isSmallScreen ? "small" : "medium"} />
                     </IconButton>
                     <TextField
                       value={
@@ -229,7 +283,10 @@ export default function CartComponent({
                           : (quantityInputs[item.id] ?? item.quantity)
                       }
                       size="small"
-                      sx={{ width: 60, mx: 1 }}
+                      sx={{
+                        width: isSmallScreen ? 50 : 60,
+                        mx: isSmallScreen ? 0.5 : 1,
+                      }}
                       inputProps={{
                         style: { textAlign: "center" },
                         min: 1,
@@ -241,11 +298,20 @@ export default function CartComponent({
                     <IconButton
                       onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
                       aria-label="Increase quantity"
+                      size={isSmallScreen ? "small" : "medium"}
                     >
-                      <AddIcon />
+                      <AddIcon fontSize={isSmallScreen ? "small" : "medium"} />
                     </IconButton>
                   </Box>
-                  <Typography variant="subtitle1" sx={{ minWidth: 100, textAlign: "right", mx: 2 }}>
+                  <Typography
+                    variant={isSmallScreen ? "body1" : "subtitle1"}
+                    sx={{
+                      minWidth: isSmallScreen ? 80 : 100,
+                      textAlign: "right",
+                      mx: isSmallScreen ? 1 : 2,
+                      mt: isVerySmallScreen ? 1 : 0,
+                    }}
+                  >
                     {currency} {totalItemPrice.toFixed(2)}
                   </Typography>
                   <IconButton
@@ -253,8 +319,10 @@ export default function CartComponent({
                     onClick={() => onRemoveItem(item.id)}
                     aria-label="Remove item"
                     color="error"
+                    size={isSmallScreen ? "small" : "medium"}
+                    sx={{ mt: isVerySmallScreen ? 1 : 0 }}
                   >
-                    <DeleteIcon />
+                    <DeleteIcon fontSize={isSmallScreen ? "small" : "medium"} />
                   </IconButton>
                 </ListItem>
                 {index < cart.lineItems.length - 1 && <Divider variant="inset" component="li" />}
@@ -275,7 +343,11 @@ export default function CartComponent({
               size="small"
               fullWidth
             />
-            <Button variant="contained" onClick={onApplyPromoCode}>
+            <Button
+              variant="contained"
+              onClick={onApplyPromoCode}
+              size={isSmallScreen ? "small" : "medium"}
+            >
               Apply
             </Button>
           </Box>
@@ -284,12 +356,12 @@ export default function CartComponent({
         <Box mt={4} pt={2} borderTop={1} borderColor="divider">
           <Grid container justifyContent="space-between">
             <Grid>
-              <Typography variant="h6">Total:</Typography>
+              <Typography variant={isSmallScreen ? "subtitle1" : "h6"}>Total:</Typography>
             </Grid>
             <Grid>
               {hasDiscounts && (
                 <Typography
-                  variant="body1"
+                  variant={isSmallScreen ? "body2" : "body1"}
                   sx={{
                     textDecoration: "line-through",
                     color: "text.secondary",
@@ -300,13 +372,21 @@ export default function CartComponent({
                 </Typography>
               )}
               <Box display="flex" alignItems="center">
-                <MonetizationOnIcon color="primary" sx={{ mr: 1 }} />
-                <Typography variant="h5">
+                <MonetizationOnIcon
+                  color="primary"
+                  sx={{ mr: 1 }}
+                  fontSize={isSmallScreen ? "small" : "medium"}
+                />
+                <Typography variant={isSmallScreen ? "h6" : "h5"}>
                   {currency} {totalPrice.toFixed(2)}
                 </Typography>
               </Box>
               {hasDiscounts && (
-                <Typography variant="body2" color="success.main" textAlign="right">
+                <Typography
+                  variant={isSmallScreen ? "caption" : "body2"}
+                  color="success.main"
+                  textAlign="right"
+                >
                   You saved {currency} {(originalTotal - totalPrice).toFixed(2)}!
                 </Typography>
               )}
@@ -315,14 +395,28 @@ export default function CartComponent({
         </Box>
       </StyledPaper>
 
-      <Dialog open={openClearDialog} onClose={() => setOpenClearDialog(false)}>
+      <Dialog
+        open={openClearDialog}
+        onClose={() => setOpenClearDialog(false)}
+        fullScreen={isVerySmallScreen}
+      >
         <DialogTitle>Clear Shopping Cart</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to remove all items from your cart?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenClearDialog(false)}>Cancel</Button>
-          <Button onClick={handleConfirmClearCart} color="error" variant="contained">
+          <Button
+            onClick={() => setOpenClearDialog(false)}
+            size={isSmallScreen ? "small" : "medium"}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmClearCart}
+            color="error"
+            variant="contained"
+            size={isSmallScreen ? "small" : "medium"}
+          >
             Clear Cart
           </Button>
         </DialogActions>
