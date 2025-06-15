@@ -1,5 +1,5 @@
 import { useEffect, useState, type PropsWithChildren } from "react";
-import { getAuthToken } from "../shared/utils/auth-token";
+import { getTokenObject } from "../shared/utils/auth-token";
 import { AuthContext } from "./auth-context";
 
 export function AuthProvider({ children }: PropsWithChildren) {
@@ -15,8 +15,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
   };
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
+    const tokenObject = getTokenObject();
+
+    if (tokenObject && !tokenObject?.scope.includes("create_anonymous_token")) {
       setIsLoggedIn(true);
       setIsLoading(true);
     } else {
