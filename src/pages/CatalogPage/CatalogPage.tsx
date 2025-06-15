@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { productService } from "../../api/products";
 import Catalog from "../../components/Catalog/Catalog";
 import type { Product, ProductResponse, ProductType } from "../../shared/types/product.types";
-import { getFilteredProducts } from "../../shared/utils/products-sorting";
 import { cartService } from "../../api/cart";
 import type { Cart } from "@commercetools/platform-sdk";
 
@@ -36,11 +35,13 @@ function CatalogPage() {
 
   useEffect((): void => {
     const fetchCart = async () => {
+      let createdCart;
       try {
-        const cart = await cartService.createCart();
-        setCart(cart);
-      } catch (error) {
-        console.error("Failed to fetch cart", error);
+        createdCart = await cartService.getCart();
+      } catch {
+        createdCart = await cartService.createCart();
+      } finally {
+        setCart(createdCart);
       }
     };
     fetchCart();
@@ -81,29 +82,19 @@ function CatalogPage() {
   const fetchProducts = async (): Promise<void> => {
     try {
       makeFilters();
-      const params = {
-        limit: PRODUCT_PER_PAGE,
-        offset: PRODUCT_PER_PAGE * (currentPage - 1),
-      };
-      let filter: string = "";
-      if (chosenCategoryId) {
-        filter = `productType(id="${chosenCategoryId}")`;
-      }
+
       const response: ProductResponse = await productService.getProducts(
-        { limit: 500, offset: 0 },
-        filter
-      );
-      const [products, total]: [Product[], number] = getFilteredProducts(
-        response.results,
-        params,
+        { limit: PRODUCT_PER_PAGE, offset: PRODUCT_PER_PAGE * (currentPage - 1) },
+        chosenCategoryId,
         filterQuery,
         priceMin,
         priceMax,
         sortParam,
         sortDir
       );
-      setProducts(products);
-      setTotalPages(Math.ceil(total / PRODUCT_PER_PAGE));
+
+      setProducts(response.results);
+      setTotalPages(Math.ceil(response.total / PRODUCT_PER_PAGE));
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
