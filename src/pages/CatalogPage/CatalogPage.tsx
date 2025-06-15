@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { productService } from "../../api/products";
 import Catalog from "../../components/Catalog/Catalog";
 import type { Product, ProductResponse, ProductType } from "../../shared/types/product.types";
@@ -79,7 +79,24 @@ function CatalogPage() {
     }
   }
 
-  const fetchProducts = async (): Promise<void> => {
+  const makeFilters = useCallback(
+    function (): void {
+      let filtersUsed: string = "";
+      if (filterQuery) {
+        filtersUsed += `Search with: "${filterQuery}"; `;
+      }
+      if (parseInt(priceMin) > 0 || parseInt(priceMin) < 400) {
+        filtersUsed += `Price between ${priceMin} and ${priceMax}; `;
+      }
+      if (sortParam) {
+        filtersUsed += `Sorting by ${sortParam}, ${sortDir}; `;
+      }
+      setUsedFilters(filtersUsed);
+    },
+    [filterQuery, priceMax, priceMin, sortDir, sortParam]
+  );
+
+  const fetchProducts = useCallback(async (): Promise<void> => {
     try {
       makeFilters();
 
@@ -98,28 +115,23 @@ function CatalogPage() {
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
-  };
+  }, [
+    makeFilters,
+    currentPage,
+    chosenCategoryId,
+    filterQuery,
+    priceMin,
+    priceMax,
+    sortParam,
+    sortDir,
+  ]);
 
   useEffect((): void => {
     fetchProducts();
-  }, [chosenCategoryId, currentPage]);
+  }, [chosenCategoryId, currentPage, fetchProducts]);
 
   function handleCategorySelection(id: string): void {
     setChosenCategoryId((prev) => (prev === id ? "" : id));
-  }
-
-  function makeFilters(): void {
-    let filtersUsed: string = "";
-    if (filterQuery) {
-      filtersUsed += `Search with: "${filterQuery}"; `;
-    }
-    if (parseInt(priceMin) > 0 || parseInt(priceMin) < 400) {
-      filtersUsed += `Price between ${priceMin} and ${priceMax}; `;
-    }
-    if (sortParam) {
-      filtersUsed += `Sorting by ${sortParam}, ${sortDir}; `;
-    }
-    setUsedFilters(filtersUsed);
   }
 
   return (
