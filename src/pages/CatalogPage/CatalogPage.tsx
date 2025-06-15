@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { productService } from "../../api/products";
 import Catalog from "../../components/Catalog/Catalog";
 import type { Product, ProductResponse, ProductType } from "../../shared/types/product.types";
-import { getFilteredProducts } from "../../shared/utils/products-sorting";
+import { cartService } from "../../api/cart";
+import type { Cart } from "@commercetools/platform-sdk";
 
 function CatalogPage() {
   const [categories, setCategories] = useState<ProductType[]>([]);
@@ -16,6 +17,8 @@ function CatalogPage() {
   const [sortParam, setSortParam] = useState<"name" | "price" | "">("");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [usedFilters, setUsedFilters] = useState<string>("");
+  const [cart, setCart] = useState<Cart>();
+  const [loadingCart, setLoadingCart] = useState(false);
   const PRODUCT_PER_PAGE = 3;
 
   useEffect((): void => {
@@ -31,60 +34,104 @@ function CatalogPage() {
   }, []);
 
   useEffect((): void => {
+    const fetchCart = async () => {
+      let createdCart;
+      try {
+        createdCart = await cartService.getCart();
+      } catch {
+        createdCart = await cartService.createCart();
+      } finally {
+        setCart(createdCart);
+      }
+    };
+    fetchCart();
+  }, []);
+
+  useEffect((): void => {
     setCurrentPage(1);
   }, [chosenCategoryId]);
 
-  const fetchProducts = async (): Promise<void> => {
+  async function updateCart() {
+    try {
+      const updatedCart = await cartService.getCart();
+      setCart(updatedCart);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async function handleAddToCart(sku: string) {
+    try {
+      setLoadingCart(true);
+      if (!cart) {
+        await cartService.createCart();
+        const newCart = await cartService.getCart();
+        setCart(newCart);
+        await cartService.addItemToCart(newCart.id, newCart.version, sku);
+      } else {
+        await cartService.addItemToCart(cart.id, cart.version, sku);
+      }
+      await updateCart();
+    } catch (error) {
+      console.error("Error: ", error);
+    } finally {
+      setLoadingCart(false);
+    }
+  }
+
+  const makeFilters = useCallback(
+    function (): void {
+      let filtersUsed: string = "";
+      if (filterQuery) {
+        filtersUsed += `Search with: "${filterQuery}"; `;
+      }
+      if (parseInt(priceMin) > 0 || parseInt(priceMin) < 400) {
+        filtersUsed += `Price between ${priceMin} and ${priceMax}; `;
+      }
+      if (sortParam) {
+        filtersUsed += `Sorting by ${sortParam}, ${sortDir}; `;
+      }
+      setUsedFilters(filtersUsed);
+    },
+    [filterQuery, priceMax, priceMin, sortDir, sortParam]
+  );
+
+  const fetchProducts = useCallback(async (): Promise<void> => {
     try {
       makeFilters();
-      const params = {
-        limit: PRODUCT_PER_PAGE,
-        offset: PRODUCT_PER_PAGE * (currentPage - 1),
-      };
-      let filter: string = "";
-      if (chosenCategoryId) {
-        filter = `productType(id="${chosenCategoryId}")`;
-      }
+
       const response: ProductResponse = await productService.getProducts(
-        { limit: 500, offset: 0 },
-        filter
-      );
-      const [products, total]: [Product[], number] = getFilteredProducts(
-        response.results,
-        params,
+        { limit: PRODUCT_PER_PAGE, offset: PRODUCT_PER_PAGE * (currentPage - 1) },
+        chosenCategoryId,
         filterQuery,
         priceMin,
         priceMax,
         sortParam,
         sortDir
       );
-      setProducts(products);
-      setTotalPages(Math.ceil(total / PRODUCT_PER_PAGE));
+
+      setProducts(response.results);
+      setTotalPages(Math.ceil(response.total / PRODUCT_PER_PAGE));
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
-  };
+  }, [
+    makeFilters,
+    currentPage,
+    chosenCategoryId,
+    filterQuery,
+    priceMin,
+    priceMax,
+    sortParam,
+    sortDir,
+  ]);
 
   useEffect((): void => {
     fetchProducts();
-  }, [chosenCategoryId, currentPage]);
+  }, [chosenCategoryId, currentPage, fetchProducts]);
 
   function handleCategorySelection(id: string): void {
     setChosenCategoryId((prev) => (prev === id ? "" : id));
-  }
-
-  function makeFilters(): void {
-    let filtersUsed: string = "";
-    if (filterQuery) {
-      filtersUsed += `Search with: "${filterQuery}"; `;
-    }
-    if (parseInt(priceMin) > 0 || parseInt(priceMin) < 400) {
-      filtersUsed += `Price between ${priceMin} and ${priceMax}; `;
-    }
-    if (sortParam) {
-      filtersUsed += `Sorting by ${sortParam}, ${sortDir}; `;
-    }
-    setUsedFilters(filtersUsed);
   }
 
   return (
@@ -108,6 +155,9 @@ function CatalogPage() {
       setSortDir={setSortDir}
       fetchProducts={fetchProducts}
       usedFilters={usedFilters}
+      cart={cart}
+      handleAddToCart={handleAddToCart}
+      loadingCart={loadingCart}
     />
   );
 }

@@ -46,6 +46,11 @@ describe("Catalog", () => {
             throw new Error("Function not implemented.");
           }}
           usedFilters=""
+          handleAddToCart={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          cart={undefined}
+          loadingCart={false}
         />
       </Router>
     );

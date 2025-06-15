@@ -333,7 +333,11 @@ export default function UserProfileForm({
                 variant="contained"
                 onClick={onSubmitPassword}
                 disabled={
-                  !passwords.current || !passwords.new || passwords.new !== passwords.confirm
+                  !passwords.current ||
+                  !passwords.new ||
+                  passwords.new !== passwords.confirm ||
+                  passwords.current === passwords.new ||
+                  passwords.current === passwords.confirm
                 }
                 sx={{ mt: 1 }}
               >

@@ -27,24 +27,39 @@ export const productService = {
   },
 
   async getProducts(
-    params?: { limit: number; offset: number },
-    filter?: string
+    params: { limit: number; offset: number },
+    chosenCategoryId: string,
+    filterQuery: string,
+    priceMin: string,
+    priceMax: string,
+    sortParam: "name" | "price" | "",
+    sortDir: "asc" | "desc"
   ): Promise<ProductResponse> {
     try {
       const access_token = await this.getToken();
-      const requestParams: Record<string, string | boolean | number> = {
-        ...params,
-      };
-      if (filter) {
-        requestParams.where = filter;
-      }
+
+      const param = new URLSearchParams();
+      if (sortParam === "name") param.append("sort", `name.en-US ${sortDir}`);
+      else if (sortParam === "price") param.append("sort", `price ${sortDir}`);
+      if (filterQuery) param.append("text.en-US", filterQuery.toLowerCase());
+
+      let min: string = "0";
+      let max: string = "1000000";
+      if (priceMin !== "") min = priceMin + "00";
+      if (priceMax !== "") max = priceMax + "00";
+      param.append("filter", `variants.price.centAmount:range (${min} to ${max})`);
+      param.append("limit", params.limit.toString());
+      param.append("offset", params.offset.toString());
+
+      if (chosenCategoryId !== "") param.append("filter", `productType.id:"${chosenCategoryId}"`);
+
       const response: AxiosResponse<ProductResponse> = await axios.get(
-        `${API_URL}/product-projections`,
+        `${API_URL}/product-projections/search`,
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
-          params: requestParams,
+          params: param,
         }
       );
       return response.data;
