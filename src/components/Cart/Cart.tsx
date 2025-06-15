@@ -119,7 +119,12 @@ export default function CartComponent({
 
   const calculateOriginalTotal = (cart: Cart) => {
     return cart.lineItems.reduce(
-      (total, item) => total + (item.price.value.centAmount / 100) * item.quantity,
+      (total, item) =>
+        total +
+        (item.price.discounted
+          ? item.price.discounted?.value.centAmount / 100
+          : item.price.value.centAmount / 100) *
+          item.quantity,
       0
     );
   };
