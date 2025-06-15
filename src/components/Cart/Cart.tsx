@@ -60,25 +60,47 @@ export default function CartComponent({
 }: CartProps) {
   const [openClearDialog, setOpenClearDialog] = useState(false);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>({});
+  const [focusedInput, setFocusedInput] = useState<string | undefined>(undefined);
+
+  React.useEffect(() => {
+    if (cart) {
+      const initialQuantities = cart.lineItems.reduce(
+        (acc, item) => {
+          acc[item.id] = item.quantity;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+      setQuantityInputs(initialQuantities);
+    }
+  }, [cart]);
 
   const handleQuantityChange = (itemId: string, currentQuantity: number, change: number) => {
     const newQuantity = currentQuantity + change;
     if (newQuantity > 0) {
+      setQuantityInputs((prev) => ({ ...prev, [itemId]: newQuantity }));
       onUpdateQuantity(itemId, newQuantity);
     }
   };
 
   const handleInputChange = (itemId: string, value: string) => {
     const numValue = parseInt(value, 10);
-    if (!isNaN(numValue) && numValue > 0) {
+    if (!isNaN(numValue)) {
       setQuantityInputs((prev) => ({ ...prev, [itemId]: numValue }));
     }
   };
 
+  const handleInputFocus = (itemId: string) => {
+    setFocusedInput(itemId);
+  };
+
   const handleInputBlur = (itemId: string, currentQuantity: number) => {
+    setFocusedInput(undefined);
     const newQuantity = quantityInputs[itemId];
-    if (newQuantity !== undefined && newQuantity !== currentQuantity) {
+    if (newQuantity !== undefined && newQuantity > 0 && newQuantity !== currentQuantity) {
       onUpdateQuantity(itemId, newQuantity);
+    } else if (newQuantity <= 0) {
+      setQuantityInputs((prev) => ({ ...prev, [itemId]: currentQuantity }));
     }
   };
 
@@ -199,7 +221,11 @@ export default function CartComponent({
                       <RemoveIcon />
                     </IconButton>
                     <TextField
-                      value={quantityInputs[item.id] ?? item.quantity}
+                      value={
+                        focusedInput === item.id
+                          ? quantityInputs[item.id]
+                          : (quantityInputs[item.id] ?? item.quantity)
+                      }
                       size="small"
                       sx={{ width: 60, mx: 1 }}
                       inputProps={{
@@ -207,6 +233,7 @@ export default function CartComponent({
                         min: 1,
                       }}
                       onChange={(e) => handleInputChange(item.id, e.target.value)}
+                      onFocus={() => handleInputFocus(item.id)}
                       onBlur={() => handleInputBlur(item.id, item.quantity)}
                     />
                     <IconButton
