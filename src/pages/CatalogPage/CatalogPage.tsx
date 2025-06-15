@@ -35,11 +35,13 @@ function CatalogPage() {
 
   useEffect((): void => {
     const fetchCart = async () => {
+      let createdCart;
       try {
-        const cart = await cartService.createCart();
-        setCart(cart);
-      } catch (error) {
-        console.error("Failed to fetch cart", error);
+        createdCart = await cartService.getCart();
+      } catch {
+        createdCart = await cartService.createCart();
+      } finally {
+        setCart(createdCart);
       }
     };
     fetchCart();
