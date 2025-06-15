@@ -19,8 +19,13 @@ export default function CartPage() {
         setCart(cartData);
         setError(undefined);
       } catch (err) {
+        if (err instanceof Error && err.message === "No active cart exists.") {
+          await cartService.createCart();
+          setCart(await cartService.getCart());
+          setError(undefined);
+          return;
+        }
         setError("Failed to load cart");
-        console.error(err);
       } finally {
         setLoading(false);
       }
