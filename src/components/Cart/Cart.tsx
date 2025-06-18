@@ -240,7 +240,7 @@ export default function CartComponent({
                 >
                   <ListItemAvatar sx={{ minWidth: isVerySmallScreen ? "100%" : undefined }}>
                     <Avatar
-                      alt={item.name["en"]}
+                      alt={item.name["en-US"]}
                       src={imageUrl}
                       variant="square"
                       sx={{
@@ -253,7 +253,7 @@ export default function CartComponent({
                   <ListItemText
                     primary={
                       <Typography variant={isSmallScreen ? "subtitle1" : "h6"}>
-                        {item.name["en"]}
+                        {item.name["en-US"]}
                       </Typography>
                     }
                     secondary={
