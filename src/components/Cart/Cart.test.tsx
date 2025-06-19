@@ -13,7 +13,7 @@ describe("CartComponent", () => {
       {
         id: "item-1",
         productId: "prod-1",
-        name: { en: "Test Product 1" },
+        name: { "en-US": "Test Product 1" },
         variant: {
           id: 1,
           images: [
