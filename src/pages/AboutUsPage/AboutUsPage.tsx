@@ -54,7 +54,7 @@ function AboutUsPage() {
             "State Management",
           ]}
           githubLink="https://github.com/c00b3r"
-          photoUrl="/AleksandrAvatar.jpg"
+          photoUrl="/690851083.jpeg"
         ></CreatorCard>
       </Box>
       <Link to="https://rs.school/" target="_blank">
