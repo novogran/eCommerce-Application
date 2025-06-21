@@ -8,7 +8,7 @@ import react from "eslint-plugin-react";
 import prettier from "eslint-plugin-prettier";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist", "coverage"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -33,6 +33,8 @@ export default tseslint.config(
       "react/react-in-jsx-scope": "off",
       "unicorn/no-null": "error",
       "prettier/prettier": "error",
+      "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "NavLink" }],
+      "linebreak-style": "off",
     },
   }
 );
