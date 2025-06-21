@@ -1,0 +1,4 @@
+.date-picker,
+.date-picker * {
+  outline: none !important;
+}
